@@ -5,11 +5,20 @@
   "description": "integraPCS monorepo: GraphQL backend and React frontend with shared types",
   "scripts": {
     "dev": "./dev-start.sh",
-    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install && cd ../packages/shared-types && npm install && cd ../..",
-    "build:packages": "cd packages/shared-types && npm run build && cd ../..",
-    "backend:dev": "cd backend && npm run dev",
-    "frontend:dev": "cd frontend && npm run dev",
-    "test": "cd backend && npm test && cd ../frontend && npm test",
+    "build": "npm run build -w packages/shared-types && npm run build -w backend && npm run build -w frontend",
+    "build:shared": "npm run build -w packages/shared-types",
+    "dev:backend": "npm run dev -w backend",
+    "dev:frontend": "npm run dev -w frontend",
+    "test": "npm run test --workspaces --if-present",
+    "test:unit": "npm run test -w backend && npm run test -w frontend",
+    "test:e2e": "npm run test:e2e -w frontend",
+    "test:integration": "npm run test:integration -w backend --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "lint:fix": "npm run lint:fix --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,css}\" --ignore-path .gitignore",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,css}\" --ignore-path .gitignore",
+    "clean": "npm run clean --workspaces --if-present && rm -rf node_modules",
     "prepare": "husky"
   },
   "workspaces": [
@@ -23,6 +32,8 @@
   "devDependencies": {
     "chalk": "^5.4.1",
     "husky": "^9.1.4",
+    "prettier": "^3.3.2",
+    "prettier-plugin-tailwindcss": "^0.6.11",
     "typescript": "5.9.3"
   }
 }
