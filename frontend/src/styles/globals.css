@@ -1,25 +1,50 @@
 /* Import Tailwind and tokens (v4) */
 @import "./tokens.css";
 
-/* Minimal base styles */
-:root {
-  color-scheme: light;
+@layer base {
+  * {
+    @apply border-neutral-200;
+  }
+
+  :root {
+    color-scheme: light;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-neutral-50 text-neutral-900 font-sans antialiased;
+    margin: 0;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+
+  a {
+    @apply text-brand-600 hover:text-brand-700 transition-colors;
+  }
+
+  button {
+    @apply cursor-pointer;
+  }
+
+  button:disabled {
+    @apply cursor-not-allowed opacity-50;
+  }
 }
 
-html,
-body,
-#root {
-  height: 100%;
-}
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
 
-body {
-  margin: 0;
-  font-family: var(--font-sans);
-  background-color: var(--color-neutral-50);
-  color: var(--color-neutral-900);
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
+  .container {
+    @apply mx-auto px-4;
+    max-width: 1280px;
+  }
 }

@@ -186,7 +186,7 @@ check_import_statements() {
                 done
             done
             log_info "Convert require() to ES6 import statements"
-        } else
+        else
             log_success "No problematic require() statements found"
         fi
     fi
