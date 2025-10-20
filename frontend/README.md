@@ -15,7 +15,7 @@ React 19 + Vite 6 application using:
    docker-compose up -d
 
 3) Build shared types (from repo root):
-   npm run build:packages
+   npm run build:shared
 
 4) Start dev servers (from repo root):
    ./dev-start.sh
@@ -25,14 +25,14 @@ React 19 + Vite 6 application using:
 5) Configure environment (optional):
    - Copy `.env.example` to `.env`
    - Ensure:
-     - VITE_GRAPHQL_HTTP_URL=http://localhost:3000/graphql
-     - VITE_GRAPHQL_WS_URL=ws://localhost:3000/graphql
+     - VITE_GRAPHQL_HTTP=http://localhost:3000/graphql
+     - VITE_GRAPHQL_WS=ws://localhost:3000/graphql
 
 ## Apollo Client Setup (HTTP/WS Split)
 
 Use an HTTP link for queries/mutations and a WebSocket link for subscriptions (graphql-ws protocol), then split based on operation type.
 
-Example `src/lib/apolloClient.ts`:
+Example `src/lib/apollo.ts`:
 
 import { ApolloClient, InMemoryCache, HttpLink, split } from '@apollo/client';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
@@ -40,13 +40,13 @@ import { getMainDefinition } from '@apollo/client/utilities';
 import { createClient } from 'graphql-ws';
 
 const httpLink = new HttpLink({
-  uri: import.meta.env.VITE_GRAPHQL_HTTP_URL,
+  uri: import.meta.env.VITE_GRAPHQL_HTTP,
   credentials: 'include'
 });
 
 const wsLink = new GraphQLWsLink(
   createClient({
-    url: import.meta.env.VITE_GRAPHQL_WS_URL
+    url: import.meta.env.VITE_GRAPHQL_WS
   })
 );
 
@@ -65,7 +65,7 @@ export const apollo = new ApolloClient({
 In your `src/main.tsx`, wrap your app:
 
 import { ApolloProvider } from '@apollo/client';
-import { apollo } from './lib/apolloClient';
+import { apollo } from './lib/apollo';
 import './styles/globals.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

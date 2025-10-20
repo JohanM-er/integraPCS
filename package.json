@@ -12,7 +12,7 @@
     "test": "npm run test --workspaces --if-present",
     "test:unit": "npm run test -w backend && npm run test -w frontend",
     "test:e2e": "npm run test:e2e -w frontend",
-    "test:integration": "npm run test:integration -w backend --if-present",
+    "test:integration": "npm -w backend run test:integration --if-present",
     "lint": "npm run lint --workspaces --if-present",
     "lint:fix": "npm run lint:fix --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",

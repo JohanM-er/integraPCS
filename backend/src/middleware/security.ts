@@ -41,8 +41,7 @@ export function applySecurityHeaders(app: Express): void {
       },
       ieNoOpen: true,
       noSniff: true,
-      referrerPolicy: { policy: 'no-referrer' },
-      xssFilter: true
+      referrerPolicy: { policy: 'no-referrer' }
     })
   );
 }

@@ -22,6 +22,15 @@ cd backend
 npm run dev > backend.log 2>&1 &
 BACKEND_PID=$!
 echo "Backend started with PID: $BACKEND_PID"
+cleanup() {
+    echo "🛑 Stopping servers..."
+    if [[ -n "${BACKEND_PID:-}" ]]; then
+        kill "$BACKEND_PID" 2>/dev/null || true
+    fi
+    exit 0
+}
+
+trap cleanup SIGINT SIGTERM
 
 # Give backend time to start
 sleep 3
@@ -30,16 +39,6 @@ sleep 3
 echo "🎨 Starting frontend server (http://localhost:5173)..."
 cd ../frontend
 npm run dev
-
-# Cleanup function
-cleanup() {
-    echo "🛑 Stopping servers..."
-    kill $BACKEND_PID 2>/dev/null
-    exit 0
-}
-
-# Set up signal handlers
-trap cleanup SIGINT SIGTERM
 
 # Wait for frontend to exit
 wait

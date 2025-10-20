@@ -1,6 +1,8 @@
 import rateLimit from 'express-rate-limit';
 import RedisStore from 'rate-limit-redis';
+import type { RedisReply } from 'rate-limit-redis';
 import Redis from 'ioredis';
+import type { Request, Response, NextFunction, RequestHandler } from 'express';
 
 // Initialize Redis client for rate limiting
 const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379', {
@@ -19,8 +21,8 @@ redis.on('error', err => {
  */
 export const apiLimiter = rateLimit({
   store: new RedisStore({
-    // @ts-expect-error - rate-limit-redis types are outdated
-    client: redis,
+    sendCommand: async (...args: [command: string, ...params: string[]]): Promise<RedisReply> =>
+      redis.call(args[0], ...args.slice(1)) as Promise<RedisReply>,
     prefix: 'rl:api:'
   }),
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -45,8 +47,8 @@ export const apiLimiter = rateLimit({
  */
 export const loginLimiter = rateLimit({
   store: new RedisStore({
-    // @ts-expect-error - rate-limit-redis types are outdated
-    client: redis,
+    sendCommand: async (...args: [command: string, ...params: string[]]): Promise<RedisReply> =>
+      redis.call(args[0], ...args.slice(1)) as Promise<RedisReply>,
     prefix: 'rl:login:'
   }),
   windowMs: 15 * 60 * 1000,
@@ -68,8 +70,8 @@ export const loginLimiter = rateLimit({
  */
 export const mutationLimiter = rateLimit({
   store: new RedisStore({
-    // @ts-expect-error - rate-limit-redis types are outdated
-    client: redis,
+    sendCommand: async (...args: [command: string, ...params: string[]]): Promise<RedisReply> =>
+      redis.call(args[0], ...args.slice(1)) as Promise<RedisReply>,
     prefix: 'rl:mutation:'
   }),
   windowMs: 5 * 60 * 1000, // 5 minutes
@@ -90,23 +92,27 @@ export const mutationLimiter = rateLimit({
  * app.use('/graphql', graphqlRateLimitMiddleware);
  * ```
  */
-export const graphqlRateLimitMiddleware = (req: any, res: any, next: any) => {
-  const operationName = req.body?.operationName;
-  const query = req.body?.query || '';
+export const graphqlRateLimitMiddleware = ((req: Request, res: Response, next: NextFunction): void => {
+  const body = (req.body ?? {}) as { operationName?: string; query?: string };
+  const operationName = body.operationName;
+  const query = body.query ?? '';
 
   // Apply stricter rate limit for authentication
   if (operationName === 'Login' || operationName === 'Register') {
-    return loginLimiter(req, res, next);
+    loginLimiter(req, res, next);
+    return;
   }
 
   // Apply mutation rate limit
   if (query.trim().startsWith('mutation')) {
-    return mutationLimiter(req, res, next);
+    mutationLimiter(req, res, next);
+    return;
   }
 
   // Default: API rate limit
-  return apiLimiter(req, res, next);
-};
+  apiLimiter(req, res, next);
+  return;
+}) as RequestHandler;
 
 /**
  * Close Redis connection on shutdown
