@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "chalk": "^5.4.1",
-    "husky": "^9.1.4"
+    "husky": "^9.1.4",
+    "typescript": "5.9.3"
   }
 }
