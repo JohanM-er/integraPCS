@@ -1,0 +1,92 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Automated dependency updates for integraPCS monorepo",
+  "extends": ["config:recommended"],
+  "timezone": "America/New_York",
+  "schedule": ["before 6am on Monday"],
+  "labels": ["dependencies"],
+  "assignees": [],
+  "reviewers": [],
+  "packageRules": [
+    {
+      "description": "Auto-merge minor and patch updates",
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true,
+      "automergeType": "pr",
+      "automergeStrategy": "squash",
+      "minimumReleaseAge": "3 days"
+    },
+    {
+      "description": "Require manual review for major updates",
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "labels": ["major-update", "dependencies"]
+    },
+    {
+      "description": "Auto-merge TypeScript type definitions",
+      "matchPackagePatterns": ["^@types/"],
+      "automerge": true,
+      "automergeType": "pr"
+    },
+    {
+      "description": "Group dev dependencies together",
+      "matchDepTypes": ["devDependencies"],
+      "extends": ["schedule:weekly"],
+      "groupName": "devDependencies"
+    },
+    {
+      "description": "Critical dependencies require manual review",
+      "matchPackageNames": [
+        "typescript",
+        "react",
+        "react-dom",
+        "@apollo/server",
+        "@apollo/client",
+        "graphql",
+        "neo4j-driver",
+        "ioredis",
+        "amqplib"
+      ],
+      "groupName": "critical dependencies",
+      "automerge": false,
+      "labels": ["critical-dependency", "dependencies"],
+      "reviewers": []
+    },
+    {
+      "description": "Group ESLint packages",
+      "matchPackagePatterns": ["^eslint", "^@typescript-eslint/"],
+      "groupName": "eslint packages",
+      "automerge": true
+    },
+    {
+      "description": "Group Playwright packages",
+      "matchPackagePatterns": ["^@playwright/"],
+      "groupName": "playwright packages"
+    },
+    {
+      "description": "Group Radix UI packages",
+      "matchPackagePatterns": ["^@radix-ui/"],
+      "groupName": "radix-ui packages",
+      "automerge": true
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security", "dependencies"],
+    "assignees": []
+  },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 6am on the first day of the month"],
+    "automerge": true,
+    "automergeType": "pr"
+  },
+  "prConcurrentLimit": 5,
+  "prHourlyLimit": 2,
+  "prCreation": "not-pending",
+  "semanticCommits": "enabled",
+  "commitMessagePrefix": "chore(deps):",
+  "rangeStrategy": "bump",
+  "ignoreDeprecated": true,
+  "ignoreDeps": []
+}

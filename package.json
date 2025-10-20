@@ -19,6 +19,10 @@
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,css}\" --ignore-path .gitignore",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,css}\" --ignore-path .gitignore",
     "clean": "npm run clean --workspaces --if-present && rm -rf node_modules",
+    "audit": "npm audit --audit-level=moderate",
+    "audit:fix": "npm audit fix",
+    "audit:fix:force": "npm audit fix --force",
+    "audit:prod": "npm audit --omit=dev --audit-level=high",
     "prepare": "husky"
   },
   "workspaces": [

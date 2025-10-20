@@ -13,7 +13,31 @@ env:
   NPM_CONFIG_FUND: false
 
 jobs:
-  # Job 1: Lint, format, and typecheck (parallel)
+  # Job 1: Security audit
+  security:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run npm audit (high/critical only)
+        run: npm audit --audit-level=high
+        continue-on-error: false
+
+      - name: Check for outdated dependencies
+        run: npm outdated || true
+
+  # Job 2: Lint, format, and typecheck (parallel)
   quality:
     name: Code Quality
     runs-on: ubuntu-latest
@@ -43,7 +67,7 @@ jobs:
             npm run typecheck
           fi
 
-  # Job 2: Unit tests (parallel for backend and frontend)
+  # Job 3: Unit tests (parallel for backend and frontend)
   unit-tests:
     name: Unit Tests
     runs-on: ubuntu-latest
@@ -80,7 +104,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
         continue-on-error: true
 
-  # Job 3: Integration tests (with infrastructure services)
+  # Job 4: Integration tests (with infrastructure services)
   integration-tests:
     name: Integration Tests
     runs-on: ubuntu-latest
@@ -158,7 +182,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
         continue-on-error: true
 
-  # Job 4: E2E tests (Playwright)
+  # Job 5: E2E tests (Playwright)
   e2e-tests:
     name: E2E Tests
     runs-on: ubuntu-latest
@@ -213,7 +237,7 @@ jobs:
           path: frontend/test-results/
           retention-days: 30
 
-  # Job 5: Build verification
+  # Job 6: Build verification
   build:
     name: Build Verification
     runs-on: ubuntu-latest
