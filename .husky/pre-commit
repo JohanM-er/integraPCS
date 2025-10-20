@@ -133,35 +133,46 @@ check_typescript_compilation() {
     TS_FILES=$(echo "$STAGED_FILES" | grep -E '\.ts(x)?$' 2>/dev/null || true)
 
     if [ -n "$TS_FILES" ]; then
-        # Create temporary tsconfig for staged files only
-        TEMP_CONFIG=$(mktemp)
-        # Build a JSON array of files
-        FILES_JSON=$(echo "$TS_FILES" | awk 'NF' | sed 's/"/\\"/g' | sed 's/^/"/;s/$/"/' | paste -sd, -)
-        cat > "$TEMP_CONFIG" << EOF
-{
-  "compilerOptions": {
-    "target": "ES2020",
-    "lib": ["ES2020", "DOM"],
-    "module": "commonjs",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": true
-  },
-  "files": [${FILES_JSON}]
-}
-EOF
+        # Determine which workspaces have staged TypeScript files
+        BACKEND_TS=$(echo "$TS_FILES" | grep "^backend/" || true)
+        FRONTEND_TS=$(echo "$TS_FILES" | grep "^frontend/" || true)
+        SHARED_TS=$(echo "$TS_FILES" | grep "^packages/shared-types/" || true)
 
-        if npx tsc --project "$TEMP_CONFIG" >/dev/null 2>&1; then
-            log_success "TypeScript compilation passed"
-        else
-            log_warning "TypeScript compilation failed for staged files"
-            npx tsc --project "$TEMP_CONFIG" 2>&1 | head -20
-            ((WARNINGS++))
+        TYPECHECK_FAILED=0
+
+        # Run typecheck for each workspace that has staged files
+        if [ -n "$BACKEND_TS" ]; then
+            log_info "Running backend typecheck..."
+            if ! npm run typecheck -w backend --silent >/dev/null 2>&1; then
+                log_warning "Backend TypeScript compilation has errors"
+                npm run typecheck -w backend 2>&1 | grep "error TS" | head -10
+                TYPECHECK_FAILED=1
+            fi
         fi
 
-        rm -f "$TEMP_CONFIG"
+        if [ -n "$FRONTEND_TS" ]; then
+            log_info "Running frontend typecheck..."
+            if ! npm run typecheck -w frontend --silent >/dev/null 2>&1; then
+                log_warning "Frontend TypeScript compilation has errors"
+                npm run typecheck -w frontend 2>&1 | grep "error TS" | head -10
+                TYPECHECK_FAILED=1
+            fi
+        fi
+
+        if [ -n "$SHARED_TS" ]; then
+            log_info "Running shared-types typecheck..."
+            if ! npm run typecheck -w @integrapcs/shared-types --silent >/dev/null 2>&1; then
+                log_warning "Shared types TypeScript compilation has errors"
+                npm run typecheck -w @integrapcs/shared-types 2>&1 | grep "error TS" | head -10
+                TYPECHECK_FAILED=1
+            fi
+        fi
+
+        if [ "$TYPECHECK_FAILED" -eq 0 ]; then
+            log_success "TypeScript compilation passed"
+        else
+            ((WARNINGS++))
+        fi
     else
         log_info "No staged TypeScript files detected"
     fi
