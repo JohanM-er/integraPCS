@@ -1,0 +1,27 @@
+{
+  "name": "integrapcs-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "integraPCS monorepo: GraphQL backend and React frontend with shared types",
+  "scripts": {
+    "dev": "./dev-start.sh",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install && cd ../packages/shared-types && npm install && cd ../..",
+    "build:packages": "cd packages/shared-types && npm run build && cd ../..",
+    "backend:dev": "cd backend && npm run dev",
+    "frontend:dev": "cd frontend && npm run dev",
+    "test": "cd backend && npm test && cd ../frontend && npm test",
+    "prepare": "husky"
+  },
+  "workspaces": [
+    "backend",
+    "frontend",
+    "packages/shared-types"
+  ],
+  "dependencies": {
+    "glob": "^11.0.3"
+  },
+  "devDependencies": {
+    "chalk": "^5.4.1",
+    "husky": "^9.1.4"
+  }
+}

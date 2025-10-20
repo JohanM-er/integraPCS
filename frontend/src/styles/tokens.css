@@ -1,0 +1,33 @@
+/* Tailwind v4 tokens file
+   - Single source of truth for visual tokens (colors, spacing, typography)
+   - Consumed via Tailwind utilities (e.g., bg-brand-500, p-4, text-neutral-900)
+*/
+@import "tailwindcss";
+
+@theme {
+  /* colors */
+  --color-brand-500: oklch(0.72 0.11 178);
+  --color-neutral-50:  oklch(0.98 0.01 95);
+  --color-neutral-900: oklch(0.21 0.02 95);
+
+  /* spacing scale */
+  --spacing-0: 0;
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+
+  /* typography */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  --text-scale-0: 0.875rem; /* text-sm */
+  --text-scale-1: 1rem;     /* text-base */
+  --text-scale-2: 1.125rem; /* text-lg */
+
+  /* radius */
+  --radius-2: 0.5rem;
+
+  /* shadow */
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.06);
+}

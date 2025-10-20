@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+coverage/
+*.tsbuildinfo
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# OS / Temp files
+.DS_Store
+*.log
+.vite/
+.cache/
+jest-tmp/
+.cursor/
+
+# Test artifacts
+test-results/
+test-screenshots/
+playwright-report/

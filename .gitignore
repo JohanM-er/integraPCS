@@ -1,0 +1,17 @@
+node_modules/
+.env
+.DS_Store
+dist/
+.cursor/
+*.log
+test-results/
+test-screenshots/
+package.json.backup
+
+# Docker
+.docker/
+*.pid
+docker-compose.override.yml
+.env.docker
+# Keep the example file
+!docker-compose-full.yml.example

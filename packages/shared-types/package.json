@@ -1,0 +1,25 @@
+{
+  "name": "@integrapcs/shared-types",
+  "version": "1.0.0",
+  "description": "Shared TypeScript types for integraPCS application",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "type-check": "tsc --noEmit",
+    "watch": "tsc --watch"
+  },
+  "keywords": [
+    "types",
+    "typescript",
+    "integrapcs",
+    "domain",
+    "events"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}

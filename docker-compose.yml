@@ -1,0 +1,81 @@
+# Docker Compose for Development Dependencies
+# This file containerizes only the external dependencies (Neo4j, Redis, etc.)
+# The application code (backend/frontend) runs natively for better DX
+
+services:
+  # Neo4j Graph Database
+  neo4j:
+    image: neo4j:5-community
+    container_name: integrapcs-neo4j
+    restart: unless-stopped
+    ports:
+      - "7474:7474"  # Neo4j Browser UI
+      - "7687:7687"  # Bolt protocol for connections
+    environment:
+      # Default credentials - change for production
+      NEO4J_AUTH: neo4j/password123
+      # Enable APOC plugin
+      NEO4J_PLUGINS: '["apoc"]'
+      NEO4J_apoc_export_file_enabled: "true"
+      NEO4J_apoc_import_file_enabled: "true"
+      # Memory settings (adjust based on your system)
+      NEO4J_server_memory_pagecache_size: 512M
+      NEO4J_server_memory_heap_max__size: 512M
+    volumes:
+      # Persist data between restarts
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:7474 || exit 1
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  # Redis Cache (Used for token blacklisting and user activity tracking)
+  redis:
+    image: redis:7-alpine
+    container_name: integrapcs-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # RabbitMQ Message Broker (Event Bus for Event Sourcing)
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: integrapcs-rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"   # AMQP protocol
+      - "15672:15672" # Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: scheduler
+      RABBITMQ_DEFAULT_PASS: password123
+      RABBITMQ_DEFAULT_VHOST: /
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+# Named volumes for data persistence
+volumes:
+  neo4j_data:
+    driver: local
+  neo4j_logs:
+    driver: local
+  redis_data:
+    driver: local
+  rabbitmq_data:
+    driver: local

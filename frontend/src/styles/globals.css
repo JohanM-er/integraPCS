@@ -1,0 +1,25 @@
+/* Import Tailwind and tokens (v4) */
+@import "./tokens.css";
+
+/* Minimal base styles */
+:root {
+  color-scheme: light;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background-color: var(--color-neutral-50);
+  color: var(--color-neutral-900);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
