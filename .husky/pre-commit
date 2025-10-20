@@ -1,6 +1,3 @@
-#!/usr/bin/env bash
-. "$(dirname -- "$0")/_/husky.sh"
-
 # Enhanced Pre-commit Hook
 #
 # Performs checks before allowing commits:
