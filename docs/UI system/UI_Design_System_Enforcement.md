@@ -53,7 +53,10 @@ This repository enforces design system practices through a combination of docume
 - Chromatic publication
   - Separate workflow: .github/workflows/chromatic.yml
   - Builds Storybook for frontend and publishes to Chromatic via chromaui/action@v1.
-  - Current config publishes previews but does not explicitly fail on visual diffs; gating depends on repository branch protection settings.
+  - Enforced gating: The workflow is configured with exitZeroOnChanges: false, causing the job to fail when visual changes are detected.
+  - onlyChanged: true is enabled so Chromatic snapshots only stories affected by changes for faster runs.
+  - After diffs are approved in Chromatic, the GitHub job must be re-run (or a new commit must retrigger CI) for the status to pass.
+  - Note: GitHub branch protection must be configured manually to require the Chromatic status check/job on protected branches.
 
 5) Design token foundation
 - Package: packages/design-tokens/src/tokens.css
@@ -96,13 +99,16 @@ This repository enforces design system practices through a combination of docume
     - Tailwind arbitrary values policy (check:tailwind) — blocks CI when bracketed arbitrary classes are detected in className within frontend/src; see `scripts/config/tailwind-arbitrary-allowlist.json` for temporary exceptions.
     - Type errors and ESLint/Stylelint/Prettier failures (within configured scope).
     - Failing unit/integration/E2E test suites.
+    - Chromatic visual regression gating:
+      - The chromatic workflow fails when visual changes are detected (exitZeroOnChanges: false).
+      - PRs remain blocked until diffs are reviewed/approved in Chromatic and the job is re-run (or a new commit retriggers CI).
+      - Branch protection must require the Chromatic status check/job to pass on protected branches.
 - Soft enforcement
   - Token-first usage and allowed utilities via documentation and CVA variants.
   - Tailwind class ordering via Prettier (non-blocking unless format:check fails in CI).
-  - Visual diffs surfaced via Chromatic but not explicitly configured to fail builds on diffs.
 
 Key takeaways
-- Arbitrary Tailwind values are actively prevented at commit time for frontend source files (pre-commit), which is the primary “design system” enforcement mechanism in practice.
+- Arbitrary Tailwind values are actively prevented at commit time for frontend source files (pre-commit), which is the primary "design system" enforcement mechanism in practice.
 - ESLint and Stylelint are intentionally focused on code and raw CSS linting respectively; they do not validate Tailwind class strings in JSX. Prettier handles class ordering.
 - The design token system and CVA primitives exist and are used, with Button as a concrete example; however, component-level adherence is policy-driven, not enforced by automated rules.
-- CI is strong on quality and test coverage across layers. Chromatic is integrated for visibility, with gating dependent on repository settings rather than explicit workflow failure conditions.
+- Chromatic is now a hard gate: the chromatic workflow fails on visual diffs, protected branches should require the Chromatic status check/job, and after approval in Chromatic the CI job must be re-run or a new commit must retrigger CI for the check to pass.

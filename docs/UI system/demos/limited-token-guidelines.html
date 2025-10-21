@@ -4,15 +4,13 @@
     <meta charset="utf-8" />
     <title>Limited Token Guidance Demo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content="generate-token-demos.mjs" />
     <style>
+      /* Auto-generated from packages/design-tokens/src/tokens.css */
       :root {
         --color-brand-500: oklch(0.6728 0.0888 232.28);
         --color-neutral-50: oklch(0.98 0.01 95);
         --color-neutral-900: oklch(0.21 0.02 95);
-        --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-        --text-scale-0: 0.875rem;
-        --text-scale-1: 1rem;
-        --text-scale-2: 1.125rem;
         --spacing-0: 0;
         --spacing-1: 0.25rem;
         --spacing-2: 0.5rem;
@@ -20,6 +18,13 @@
         --spacing-4: 1rem;
         --spacing-6: 1.5rem;
         --spacing-8: 2rem;
+        --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        --text-scale-0: 0.875rem;
+        --text-scale-1: 1rem;
+        --text-scale-2: 1.125rem;
+        --font-size-sm: var(--text-scale-0);
+        --font-size-base: var(--text-scale-1);
+        --font-size-lg: var(--text-scale-2);
         --radius-2: 0.5rem;
         --shadow-1: 0 1px 2px rgb(0 0 0 / 0.06);
       }
@@ -125,26 +130,52 @@
         display: flex;
         gap: var(--spacing-3);
         flex-wrap: wrap;
+        align-items: center;
       }
 
+      /* Button base styles */
       .button {
-        padding: var(--spacing-2) var(--spacing-4);
         border-radius: var(--radius-2);
         border: none;
         font-weight: 600;
-        font-size: var(--text-scale-1);
         cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      /* Auto-generated button sizes from frontend/src/lib/cva.ts */
+
+      .button.sm {
+        padding: var(--spacing-1) var(--spacing-3);
+        font-size: var(--text-scale-0);
+      }
+
+      .button.md {
+        padding: var(--spacing-2) var(--spacing-3);
+        font-size: var(--text-scale-0);
+      }
+
+      .button.lg {
+        padding: var(--spacing-2) var(--spacing-4);
+        font-size: var(--text-scale-1);
       }
 
       .button.primary {
-        background: oklch(0.6728 0.0888 232.28);
+        background: var(--color-brand-500);
         color: var(--color-neutral-50);
+      }
+
+      .button.primary:hover {
+        opacity: 0.9;
       }
 
       .button.secondary {
         background: white;
         color: var(--color-brand-500);
         border: 1px solid oklch(0.85 0.02 95);
+      }
+
+      .button.secondary:hover {
+        background: oklch(0.96 0.01 95);
       }
 
       .meta-table {
@@ -182,40 +213,59 @@
         border-radius: calc(var(--radius-2) / 2);
         font-size: var(--text-scale-0);
       }
+
+      .size-showcase {
+        display: flex;
+        gap: var(--spacing-3);
+        flex-wrap: wrap;
+        align-items: center;
+        padding: var(--spacing-4);
+        background: oklch(0.96 0.01 95);
+        border-radius: var(--radius-2);
+      }
+
+      .size-label {
+        font-size: var(--text-scale-0);
+        color: oklch(0.5 0.02 95);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-weight: 600;
+      }
     </style>
   </head>
   <body>
     <main>
       <header>
         <div class="badge-cluster">
-          <span class="badge">Guide tokens</span>
-          <span class="badge">Spacing 1-8</span>
+          <span class="badge">Auto-generated</span>
+          <span class="badge">Live tokens</span>
           <span class="badge">Typography 0-2</span>
         </div>
-        <h1>Visual System Built From the Guide&rsquo;s Minimal Token Set</h1>
+        <h1>Visual System Built From the Design Token Set</h1>
         <p>
-          This page intentionally uses the limited color, spacing, and typography scales described in the
-          guardrails document. Notice how rhythm and hierarchy rely on repeating the same few values.
+          This page is <strong>automatically generated</strong> from <code>packages/design-tokens/src/tokens.css</code>
+          and <code>frontend/src/lib/cva.ts</code>. When you change your design tokens or button sizes,
+          run <code>npm run generate:demos</code> to update this file.
         </p>
       </header>
 
       <section>
         <div class="layout">
           <div class="paragraph-stack">
-            <h2>Product overview</h2>
+            <h2>Button Sizes (Auto-generated)</h2>
             <p>
-              Headlines, body copy, and captions all sit within a narrow range (text scales 0&ndash;2), so
-              hierarchy is created mostly through weight and spacing. The layout breathes with padding
-              multiples of 4, 6, and 8.
-            </p>
-            <p>
-              Buttons, badges, and cards repeat the same radius and shadow tokens, producing a very tight
-              visual rhythm that is predictable but less expressive.
+              These button sizes are automatically synced from your CVA configuration in
+              <code>frontend/src/lib/cva.ts</code>. Currently you have <strong>3 sizes</strong> defined.
             </p>
           </div>
+          <div class="size-showcase">
+            <button class="button primary sm">SM</button>
+            <button class="button primary md">MD</button>
+            <button class="button primary lg">LG</button>
+          </div>
           <div class="cta">
-            <button class="button primary">Primary Action</button>
-            <button class="button secondary">Secondary</button>
+            <button class="button primary md">Primary Action</button>
+            <button class="button secondary md">Secondary</button>
           </div>
         </div>
 
@@ -223,8 +273,8 @@
           <article class="card">
             <h2>Cadence</h2>
             <p>
-              Vertical spacing steps of 0.75rem and 1rem repeat across every module, creating consistent
-              stacks but limiting contrast between sections.
+              Vertical spacing steps create consistent stacks. These values come directly from
+              your design tokens.
             </p>
             <table class="meta-table">
               <thead>
@@ -252,31 +302,51 @@
           <article class="card">
             <h2>Typography</h2>
             <p>
-              The system limits headings to <code>--text-scale-2</code>. Subheads step down to
-              <code>--text-scale-1</code>, while captions use <code>--text-scale-0</code>.
+              The system uses a limited type scale. Current scale:
             </p>
-            <p>
-              Without larger headline options, major section intros rely on spacing and color badges to
-              stand out.
-            </p>
+            <table class="meta-table">
+              <thead>
+                <tr>
+                  <th>Token</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>--text-scale-0</code></td>
+                  <td>0.875rem</td>
+                </tr>
+                <tr>
+                  <td><code>--text-scale-1</code></td>
+                  <td>1rem</td>
+                </tr>
+                <tr>
+                  <td><code>--text-scale-2</code></td>
+                  <td>1.125rem</td>
+                </tr>
+              </tbody>
+            </table>
           </article>
           <article class="card">
             <h2>Color usage</h2>
             <p>
-              The neutral palette collapses to two tones: background at neutral-50 and copy at neutral-900.
-              Variation comes from the single brand accent, producing high contrast but few intermediate
-              surfaces.
+              Brand color: <code>oklch(0.6728 0.0888 232.28)</code>
+            </p>
+            <p>
+              The neutral palette uses high contrast for readability. All values are pulled
+              from the live token file.
             </p>
           </article>
         </div>
       </section>
 
       <section class="limits">
-        <strong>Key limitations surfaced by the demo:</strong>
+        <strong>About this demo:</strong>
         <ul>
-          <li>Large hero headlines and jumbo spacing are unavailable, so top-level sections feel compact.</li>
-          <li>Only one surface tone prevents layered cards or subtle separators.</li>
-          <li>States (success, warning, error) cannot be expressed without introducing new tokens.</li>
+          <li>✅ Auto-generated from actual design tokens</li>
+          <li>✅ Button sizes sync with <code>frontend/src/lib/cva.ts</code></li>
+          <li>✅ Run <code>npm run generate:demos</code> to regenerate after token changes</li>
+          <li>⚠️  This replaces manual HTML edits - edit the source tokens instead</li>
         </ul>
       </section>
     </main>
