@@ -3,5 +3,5 @@ module.exports = {
   rules: {
     'color-function-notation': null
   },
-  ignoreFiles: ['**/dist/**', '**/node_modules/**']
+  ignoreFiles: ['**/dist/**', '**/node_modules/**', '**/.storybook/**']
 };
