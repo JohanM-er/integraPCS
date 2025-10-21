@@ -13,11 +13,13 @@
 - `npm run build` executes all workspace builds; use `npm run build -w backend|frontend|packages/shared-types` for focused checks. Tokens are plain CSS, no build step required.
 - Daily loops: `npm run dev -w backend`, `npm run dev -w frontend`, `npm run watch -w packages/shared-types`, and `npm run storybook -w frontend` for component work.
 - Quality gates live at the root: `npm run lint` (ESLint + Stylelint), `npm run typecheck`, `npm run format:check`.
+- `npm run check:tailwind` scans `frontend/src` for Tailwind arbitrary values in `className` strings; mirrors the pre-commit hook. CI runs this as part of the Quality job matrix.
 
 ## Coding Style & Naming Conventions
-- Prettier owns formatting (`tabWidth: 2`, single quotes, no trailing commas); run `npm run format` before pushing.
-- ESLint forbids `require()`, enforces async safety (`@typescript-eslint/no-floating-promises`), orders imports, and blocks Tailwind arbitrary values & custom classnames.
-- Stylelint (with `stylelint-config-tailwindcss`) lint CSS, allowing OKLCH colors while catching invalid at-rules.
+- Prettier owns formatting (`tabWidth: 2`, single quotes, no trailing commas). Tailwind class ordering is handled by `prettier-plugin-tailwindcss`; run `npm run format` before pushing.
+- ESLint focuses on TypeScript/React/a11y rules and general code quality; it does not validate Tailwind utility strings. Pre-commit enforces hard gates (e.g., `.only` in tests) and flags CommonJS `require()` usage.
+- Tailwind guardrails: Avoid arbitrary values like `p-[13px]` and `text-[#333]`. These are blocked by a pre-commit check in staged frontend source files; CI continues to run lint/format checks.
+- Stylelint lints CSS (root config extends `stylelint-config-tailwindcss`), but it does not validate Tailwind utility strings in JSX.
 - Naming rules: PascalCase for types/interfaces, camelCase for variables and parameters, UPPER_CASE for enum members.
 
 ## Testing Guidelines
@@ -38,7 +40,8 @@
 
 ## Visual Guardrails
 - Import `@integrapcs/design-tokens/tokens.css` (or the `frontend/src/styles/tokens.css` re-export) before authoring UI. Allowed utilities: `bg-brand-500`, `text-neutral-900`, spacing `{1,2,3,4,6,8}`, typography `{text-scale-0, text-scale-1, text-scale-2}`, `rounded-2`, `shadow-1`.
-- Do not use inline styles or Tailwind arbitrary values (e.g., `p-[13px]`, `text-[#333]`). ESLint + Stylelint will fail CI.
+- Do not use inline styles or Tailwind arbitrary values (e.g., `p-[13px]`, `text-[#333]`). The pre-commit hook blocks these in staged frontend source; Prettier orders classlists.
+- CI enforces the no-arbitrary-values policy using `npm run check:tailwind`. The check mirrors the pre-commit hook and only scans `className` lines in `frontend/src`. For temporary exceptions, add entries to `scripts/config/tailwind-arbitrary-allowlist.json` (include a clear `reason` and remove the entry promptly).
 - Prefer composing existing components in `src/components` rather than bespoke markup.
 - Uphold accessibility in generated output (semantic structure, labelled controls, focus states, descriptive alt text).
 - Add or update a Storybook story for every new visual component to keep Chromatic baselines current.

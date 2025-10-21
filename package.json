@@ -23,6 +23,8 @@
     "audit:fix": "npm audit fix",
     "audit:fix:force": "npm audit fix --force",
     "audit:prod": "npm audit --omit=dev --audit-level=high",
+    "generate:demos": "node scripts/generate-token-demos.mjs",
+    "check:tailwind": "node scripts/check-tailwind-arbitrary.mjs",
     "prepare": "husky"
   },
   "workspaces": [
@@ -36,6 +38,7 @@
   },
   "devDependencies": {
     "chalk": "^5.4.1",
+    "chromatic": "^13.3.0",
     "husky": "^9.1.4",
     "prettier": "^3.3.2",
     "prettier-plugin-tailwindcss": "^0.6.11",
