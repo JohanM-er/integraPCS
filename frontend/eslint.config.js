@@ -7,6 +7,7 @@ import prettierConfig from 'eslint-config-prettier';
 import tsParser from '@typescript-eslint/parser';
 import tsPlugin from '@typescript-eslint/eslint-plugin';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
+import importPlugin from 'eslint-plugin-import';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
@@ -41,14 +42,67 @@ export default [
     },
     plugins: {
       '@typescript-eslint': tsPlugin,
-      prettier: prettierPlugin
+      prettier: prettierPlugin,
+      import: importPlugin
+    },
+    settings: {
+      'import/parsers': {
+        '@typescript-eslint/parser': ['.ts', '.tsx']
+      },
+      'import/resolver': {
+        typescript: {
+          project: ['./tsconfig.eslint.json'],
+          alwaysTryTypes: true
+        },
+        node: {
+          extensions: ['.js', '.jsx', '.ts', '.tsx', '.d.ts']
+        }
+      }
     },
     rules: {
       ...js.configs.recommended.rules,
       ...tsPlugin.configs.recommended.rules,
       ...prettierConfig.rules,
       'prettier/prettier': 'warn',
-      '@typescript-eslint/no-explicit-any': 'off'
+      '@typescript-eslint/no-explicit-any': 'off',
+
+      // Import ordering and hygiene
+      'import/order': [
+        'warn',
+        {
+          groups: [
+            'builtin',
+            'external',
+            'internal',
+            'parent',
+            'sibling',
+            'index',
+            'type'
+          ],
+          pathGroups: [
+            { pattern: '@/**', group: 'internal', position: 'after' },
+            { pattern: '@integrapcs/**', group: 'internal', position: 'after' }
+          ],
+          pathGroupsExcludedImportTypes: ['type'],
+          'newlines-between': 'always',
+          alphabetize: { order: 'asc', caseInsensitive: true }
+        }
+      ],
+      'import/no-duplicates': 'error',
+      'import/no-cycle': ['error', { maxDepth: 3 }],
+      'import/no-self-import': 'error',
+      'no-restricted-imports': [
+        'warn',
+        {
+          patterns: [
+            {
+              group: ['**/../../**', '**/../../../**'],
+              message:
+                'Deep relative imports (../../) should be avoided. Use the @ alias.'
+            }
+          ]
+        }
+      ]
     }
   },
 
@@ -90,7 +144,7 @@ export default [
         ecmaVersion: 'latest',
         sourceType: 'module',
         ecmaFeatures: { jsx: true },
-        project: './tsconfig.json',
+        project: './tsconfig.eslint.json',
         tsconfigRootDir: __dirname
       },
       globals: {
@@ -103,7 +157,22 @@ export default [
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
       prettier: prettierPlugin,
-      'jsx-a11y': jsxA11y
+      'jsx-a11y': jsxA11y,
+      import: importPlugin
+    },
+    settings: {
+      'import/parsers': {
+        '@typescript-eslint/parser': ['.ts', '.tsx']
+      },
+      'import/resolver': {
+        typescript: {
+          project: ['./tsconfig.json'],
+          alwaysTryTypes: true
+        },
+        node: {
+          extensions: ['.js', '.jsx', '.ts', '.tsx', '.d.ts']
+        }
+      }
     },
     rules: {
       ...tsPlugin.configs.recommended.rules,
@@ -126,7 +195,45 @@ export default [
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
 
       // Disable no-undef for TypeScript (TypeScript compiler handles this better)
-      'no-undef': 'off'
+      'no-undef': 'off',
+
+      // Import ordering and hygiene
+      'import/order': [
+        'warn',
+        {
+          groups: [
+            'builtin',
+            'external',
+            'internal',
+            'parent',
+            'sibling',
+            'index',
+            'type'
+          ],
+          pathGroups: [
+            { pattern: '@/**', group: 'internal', position: 'after' },
+            { pattern: '@integrapcs/**', group: 'internal', position: 'after' }
+          ],
+          pathGroupsExcludedImportTypes: ['type'],
+          'newlines-between': 'always',
+          alphabetize: { order: 'asc', caseInsensitive: true }
+        }
+      ],
+      'import/no-duplicates': 'error',
+      'import/no-cycle': ['error', { maxDepth: 3 }],
+      'import/no-self-import': 'error',
+      'no-restricted-imports': [
+        'warn',
+        {
+          patterns: [
+            {
+              group: ['**/../../**', '**/../../../**'],
+              message:
+                'Deep relative imports (../../) should be avoided. Use the @ alias.'
+            }
+          ]
+        }
+      ]
     }
   },
 

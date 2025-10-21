@@ -7,10 +7,10 @@ import {
   type TypePolicy,
   type NormalizedCacheObject
 } from '@apollo/client';
-import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
-import { createClient as createWsClient } from 'graphql-ws';
-import { getMainDefinition } from '@apollo/client/utilities';
 import { onError } from '@apollo/client/link/error';
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
+import { getMainDefinition } from '@apollo/client/utilities';
+import { createClient as createWsClient } from 'graphql-ws';
 
 const httpUri = import.meta.env.VITE_GRAPHQL_HTTP as string;
 const wsUri = import.meta.env.VITE_GRAPHQL_WS as string;
