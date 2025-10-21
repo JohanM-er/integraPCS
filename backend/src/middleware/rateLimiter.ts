@@ -1,8 +1,9 @@
 import rateLimit from 'express-rate-limit';
-import RedisStore from 'rate-limit-redis';
-import type { RedisReply } from 'rate-limit-redis';
 import Redis from 'ioredis';
+import RedisStore from 'rate-limit-redis';
+
 import type { Request, Response, NextFunction, RequestHandler } from 'express';
+import type { RedisReply } from 'rate-limit-redis';
 
 // Initialize Redis client for rate limiting
 const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379', {
@@ -119,5 +120,5 @@ export const graphqlRateLimitMiddleware = ((req: Request, res: Response, next: N
  */
 export const closeRateLimiterRedis = async (): Promise<void> => {
   await redis.quit();
-  console.log('[Rate Limiter] Redis connection closed');
+  console.warn('[Rate Limiter] Redis connection closed');
 };

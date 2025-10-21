@@ -26,7 +26,6 @@
     "forceConsistentCasingInFileNames": true,
     "types": ["vite/client", "@testing-library/jest-dom", "jest", "node"]
   },
-  "include": ["src", "vite.config.ts"],
-  "exclude": [],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["src"],
+  "exclude": []
 }

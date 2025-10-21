@@ -6,8 +6,12 @@ import prettierPlugin from 'eslint-plugin-prettier';
 import prettierConfig from 'eslint-config-prettier';
 import tsParser from '@typescript-eslint/parser';
 import tsPlugin from '@typescript-eslint/eslint-plugin';
-import tailwindPlugin from 'eslint-plugin-tailwindcss';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export default [
   // Ignore common build and dependency folders
@@ -15,24 +19,36 @@ export default [
 
   // Node/config files (e.g., Vite, Playwright, scripts)
   {
-    files: ['*.config.{js,ts}', 'scripts/*.{js,ts}', 'playwright.config.js'],
+    files: [
+      '*.config.{js,ts}',
+      'scripts/*.{js,ts}',
+      'playwright.config.ts',
+      'tests/setup.ts',
+      '.storybook/**/*.{js,ts,tsx}'
+    ],
     languageOptions: {
+      parser: tsParser,
       ecmaVersion: 2020,
       globals: {
         ...globals.node
       },
       parserOptions: {
         ecmaVersion: 'latest',
-        sourceType: 'module'
+        sourceType: 'module',
+        project: './tsconfig.node.json',
+        tsconfigRootDir: __dirname
       }
     },
     plugins: {
+      '@typescript-eslint': tsPlugin,
       prettier: prettierPlugin
     },
     rules: {
       ...js.configs.recommended.rules,
+      ...tsPlugin.configs.recommended.rules,
       ...prettierConfig.rules,
-      'prettier/prettier': 'warn'
+      'prettier/prettier': 'warn',
+      '@typescript-eslint/no-explicit-any': 'off'
     }
   },
 
@@ -52,7 +68,6 @@ export default [
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
       prettier: prettierPlugin,
-      tailwindcss: tailwindPlugin,
       'jsx-a11y': jsxA11y
     },
     rules: {
@@ -61,32 +76,22 @@ export default [
       ...(jsxA11y.configs?.recommended?.rules || {}),
       ...prettierConfig.rules, // disable conflicting ESLint rules
       'prettier/prettier': 'warn',
-      'no-unused-vars': [
-        'warn',
-        { varsIgnorePattern: '^[A-Z_]', argsIgnorePattern: '^_' }
-      ],
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true }
-      ],
-      // Tailwind guardrails
-      'tailwindcss/no-arbitrary-value': 'error',
-      'tailwindcss/no-custom-classname': ['error', { whitelist: [] }],
-      'tailwindcss/classnames-order': 'warn'
+      'no-unused-vars': ['warn', { varsIgnorePattern: '^[A-Z_]', argsIgnorePattern: '^_' }],
+      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }]
     }
   },
 
-  // TypeScript/TSX files
+  // TypeScript/TSX files (source code only, excluding config/test files)
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ['src/**/*.{ts,tsx}'],
     languageOptions: {
       parser: tsParser,
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
         ecmaFeatures: { jsx: true },
-        project: true, // auto-detect tsconfig.json
-        tsconfigRootDir: './'
+        project: './tsconfig.json',
+        tsconfigRootDir: __dirname
       },
       globals: {
         ...globals.browser,
@@ -98,7 +103,6 @@ export default [
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
       prettier: prettierPlugin,
-      tailwindcss: tailwindPlugin,
       'jsx-a11y': jsxA11y
     },
     rules: {
@@ -119,18 +123,10 @@ export default [
 
       // React hooks discipline
       'react-hooks/exhaustive-deps': 'error',
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true }
-      ],
+      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
 
-      // Environment
-      'no-undef': 'error',
-
-      // Tailwind guardrails
-      'tailwindcss/no-arbitrary-value': 'error',
-      'tailwindcss/no-custom-classname': ['error', { whitelist: [] }],
-      'tailwindcss/classnames-order': 'warn'
+      // Disable no-undef for TypeScript (TypeScript compiler handles this better)
+      'no-undef': 'off'
     }
   },
 

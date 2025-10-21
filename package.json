@@ -28,6 +28,7 @@
   "workspaces": [
     "backend",
     "frontend",
+    "packages/design-tokens",
     "packages/shared-types"
   ],
   "dependencies": {
@@ -38,6 +39,9 @@
     "husky": "^9.1.4",
     "prettier": "^3.3.2",
     "prettier-plugin-tailwindcss": "^0.6.11",
+    "stylelint": "^16.9.0",
+    "stylelint-config-recommended": "^14.0.0",
+    "stylelint-config-tailwindcss": "^1.0.0",
     "typescript": "5.9.3"
   }
 }

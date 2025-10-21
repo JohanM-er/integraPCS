@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Limited Token Guidance Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      :root {
+        --color-brand-500: oklch(0.6728 0.0888 232.28);
+        --color-neutral-50: oklch(0.98 0.01 95);
+        --color-neutral-900: oklch(0.21 0.02 95);
+        --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        --text-scale-0: 0.875rem;
+        --text-scale-1: 1rem;
+        --text-scale-2: 1.125rem;
+        --spacing-0: 0;
+        --spacing-1: 0.25rem;
+        --spacing-2: 0.5rem;
+        --spacing-3: 0.75rem;
+        --spacing-4: 1rem;
+        --spacing-6: 1.5rem;
+        --spacing-8: 2rem;
+        --radius-2: 0.5rem;
+        --shadow-1: 0 1px 2px rgb(0 0 0 / 0.06);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--color-neutral-50);
+        color: var(--color-neutral-900);
+        font-family: var(--font-sans);
+        font-size: var(--text-scale-1);
+        line-height: 1.6;
+      }
+
+      main {
+        max-width: 60rem;
+        margin: 0 auto;
+        padding: var(--spacing-8) var(--spacing-4);
+        display: grid;
+        gap: var(--spacing-8);
+      }
+
+      header {
+        display: grid;
+        gap: var(--spacing-3);
+      }
+
+      h1 {
+        font-size: var(--text-scale-2);
+        margin: 0;
+        font-weight: 600;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      .badge-cluster {
+        display: flex;
+        gap: var(--spacing-2);
+        flex-wrap: wrap;
+      }
+
+      .badge {
+        padding: var(--spacing-1) var(--spacing-2);
+        border-radius: var(--radius-2);
+        background: var(--color-brand-500);
+        color: var(--color-neutral-50);
+        font-size: var(--text-scale-0);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      section {
+        background: white;
+        border-radius: var(--radius-2);
+        box-shadow: var(--shadow-1);
+        padding: var(--spacing-6);
+        display: grid;
+        gap: var(--spacing-6);
+      }
+
+      .layout {
+        display: grid;
+        gap: var(--spacing-4);
+      }
+
+      .card-grid {
+        display: grid;
+        gap: var(--spacing-4);
+      }
+
+      @media (min-width: 48rem) {
+        .card-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      .card {
+        border: 1px solid oklch(0.85 0.02 95);
+        border-radius: var(--radius-2);
+        padding: var(--spacing-4);
+        display: grid;
+        gap: var(--spacing-3);
+      }
+
+      .card h2 {
+        margin: 0;
+        font-size: var(--text-scale-2);
+      }
+
+      .paragraph-stack {
+        display: grid;
+        gap: var(--spacing-3);
+      }
+
+      .cta {
+        display: flex;
+        gap: var(--spacing-3);
+        flex-wrap: wrap;
+      }
+
+      .button {
+        padding: var(--spacing-2) var(--spacing-4);
+        border-radius: var(--radius-2);
+        border: none;
+        font-weight: 600;
+        font-size: var(--text-scale-1);
+        cursor: pointer;
+      }
+
+      .button.primary {
+        background: oklch(0.6728 0.0888 232.28);
+        color: var(--color-neutral-50);
+      }
+
+      .button.secondary {
+        background: white;
+        color: var(--color-brand-500);
+        border: 1px solid oklch(0.85 0.02 95);
+      }
+
+      .meta-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: var(--text-scale-0);
+      }
+
+      .meta-table th,
+      .meta-table td {
+        padding: var(--spacing-2);
+        text-align: left;
+        border-bottom: 1px solid oklch(0.90 0.02 95);
+      }
+
+      .meta-table th {
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-weight: 600;
+      }
+
+      .limits {
+        border: 1px dashed oklch(0.90 0.02 95);
+        padding: var(--spacing-4);
+        border-radius: var(--radius-2);
+        display: grid;
+        gap: var(--spacing-2);
+        background: oklch(0.96 0.01 95);
+      }
+
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        background: oklch(0.96 0.01 95);
+        padding: 0 var(--spacing-1);
+        border-radius: calc(var(--radius-2) / 2);
+        font-size: var(--text-scale-0);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div class="badge-cluster">
+          <span class="badge">Guide tokens</span>
+          <span class="badge">Spacing 1-8</span>
+          <span class="badge">Typography 0-2</span>
+        </div>
+        <h1>Visual System Built From the Guide&rsquo;s Minimal Token Set</h1>
+        <p>
+          This page intentionally uses the limited color, spacing, and typography scales described in the
+          guardrails document. Notice how rhythm and hierarchy rely on repeating the same few values.
+        </p>
+      </header>
+
+      <section>
+        <div class="layout">
+          <div class="paragraph-stack">
+            <h2>Product overview</h2>
+            <p>
+              Headlines, body copy, and captions all sit within a narrow range (text scales 0&ndash;2), so
+              hierarchy is created mostly through weight and spacing. The layout breathes with padding
+              multiples of 4, 6, and 8.
+            </p>
+            <p>
+              Buttons, badges, and cards repeat the same radius and shadow tokens, producing a very tight
+              visual rhythm that is predictable but less expressive.
+            </p>
+          </div>
+          <div class="cta">
+            <button class="button primary">Primary Action</button>
+            <button class="button secondary">Secondary</button>
+          </div>
+        </div>
+
+        <div class="card-grid">
+          <article class="card">
+            <h2>Cadence</h2>
+            <p>
+              Vertical spacing steps of 0.75rem and 1rem repeat across every module, creating consistent
+              stacks but limiting contrast between sections.
+            </p>
+            <table class="meta-table">
+              <thead>
+                <tr>
+                  <th>Token</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>--spacing-3</code></td>
+                  <td>0.75rem</td>
+                </tr>
+                <tr>
+                  <td><code>--spacing-4</code></td>
+                  <td>1rem</td>
+                </tr>
+                <tr>
+                  <td><code>--spacing-6</code></td>
+                  <td>1.5rem</td>
+                </tr>
+              </tbody>
+            </table>
+          </article>
+          <article class="card">
+            <h2>Typography</h2>
+            <p>
+              The system limits headings to <code>--text-scale-2</code>. Subheads step down to
+              <code>--text-scale-1</code>, while captions use <code>--text-scale-0</code>.
+            </p>
+            <p>
+              Without larger headline options, major section intros rely on spacing and color badges to
+              stand out.
+            </p>
+          </article>
+          <article class="card">
+            <h2>Color usage</h2>
+            <p>
+              The neutral palette collapses to two tones: background at neutral-50 and copy at neutral-900.
+              Variation comes from the single brand accent, producing high contrast but few intermediate
+              surfaces.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="limits">
+        <strong>Key limitations surfaced by the demo:</strong>
+        <ul>
+          <li>Large hero headlines and jumbo spacing are unavailable, so top-level sections feel compact.</li>
+          <li>Only one surface tone prevents layered cards or subtle separators.</li>
+          <li>States (success, warning, error) cannot be expressed without introducing new tokens.</li>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>

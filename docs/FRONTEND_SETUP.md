@@ -412,7 +412,7 @@ Tailwind v4 uses `@theme` directive in CSS for configuration.
   --color-brand-200: oklch(0.88 0.06 178);
   --color-brand-300: oklch(0.81 0.08 178);
   --color-brand-400: oklch(0.76 0.10 178);
-  --color-brand-500: oklch(0.72 0.11 178); /* Primary */
+  --color-brand-500: oklch(0.6728 0.0888 232.28); /* Primary */
   --color-brand-600: oklch(0.65 0.10 178);
   --color-brand-700: oklch(0.56 0.09 178);
   --color-brand-800: oklch(0.45 0.07 178);

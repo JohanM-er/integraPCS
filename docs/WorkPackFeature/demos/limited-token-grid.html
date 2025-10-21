@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Limited Token Grid Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      :root {
+        --color-brand-500: oklch(0.6728 0.0888 232.28);
+        --color-neutral-50: oklch(0.98 0.01 95);
+        --color-neutral-900: oklch(0.21 0.02 95);
+        --spacing-0: 0;
+        --spacing-1: 0.25rem;
+        --spacing-2: 0.5rem;
+        --spacing-3: 0.75rem;
+        --spacing-4: 1rem;
+        --spacing-6: 1.5rem;
+        --spacing-8: 2rem;
+        --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+        --text-scale-0: 0.875rem;
+        --text-scale-1: 1rem;
+        --text-scale-2: 1.125rem;
+        --radius-2: 0.5rem;
+        --shadow-1: 0 1px 2px rgb(0 0 0 / 0.06);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--color-neutral-50);
+        color: var(--color-neutral-900);
+        font-family: var(--font-sans);
+        font-size: var(--text-scale-0);
+        line-height: 1.3;
+      }
+
+      main {
+        max-width: 70rem;
+        margin: 0 auto;
+        padding: var(--spacing-8) var(--spacing-4);
+        display: grid;
+        gap: var(--spacing-4);
+      }
+
+      .sheet {
+        background: var(--color-neutral-50);
+        border-radius: var(--radius-2);
+        box-shadow: var(--shadow-1);
+        border: 1px solid color-mix(in oklch, var(--color-neutral-900) 12%, transparent);
+        padding: var(--spacing-4);
+        display: grid;
+        gap: var(--spacing-3);
+      }
+
+      .toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--spacing-2);
+        padding-bottom: var(--spacing-2);
+        border-bottom: 1px solid color-mix(in oklch, var(--color-neutral-900) 12%, transparent);
+      }
+
+      .toolbar h1 {
+        margin: 0;
+        font-size: var(--text-scale-2);
+        font-weight: 600;
+      }
+
+      .filters {
+        display: flex;
+        gap: var(--spacing-2);
+        flex-wrap: wrap;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--spacing-1);
+        padding: var(--spacing-1) var(--spacing-2);
+        font-size: var(--text-scale-0);
+        border-radius: calc(var(--radius-2) * 0.7);
+        border: 1px solid color-mix(in oklch, var(--color-neutral-900) 15%, transparent);
+        background: color-mix(in oklch, var(--color-neutral-900) 6%, transparent);
+      }
+
+      .pill strong {
+        font-size: inherit;
+      }
+
+      .grid-container {
+        border-radius: calc(var(--radius-2) * 0.8);
+        border: 1px solid color-mix(in oklch, var(--color-neutral-900) 18%, transparent);
+        overflow: hidden;
+        background: white;
+      }
+
+      .header-row,
+      .grid-row {
+        display: grid;
+        grid-template-columns: 80px 160px repeat(4, minmax(0, 1fr)) 110px 80px;
+        align-items: center;
+      }
+
+      .header-row {
+        background: color-mix(in oklch, var(--color-neutral-900) 6%, white);
+        font-size: var(--text-scale-0);
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: color-mix(in oklch, var(--color-neutral-900) 75%, white);
+        border-bottom: 1px solid color-mix(in oklch, var(--color-neutral-900) 15%, transparent);
+      }
+
+      .header-row span {
+        padding: var(--spacing-1) var(--spacing-2);
+      }
+
+      .grid-body {
+        max-height: 28rem;
+        overflow: auto;
+      }
+
+      .grid-row {
+        font-size: var(--text-scale-0);
+        color: color-mix(in oklch, var(--color-neutral-900) 90%, white);
+        border-bottom: 1px solid color-mix(in oklch, var(--color-neutral-900) 12%, transparent);
+        transition: background 120ms ease;
+      }
+
+      .grid-row span {
+        padding: var(--spacing-1) var(--spacing-2);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .grid-row:nth-child(even) {
+        background: color-mix(in oklch, var(--color-neutral-900) 3%, transparent);
+      }
+
+      .grid-row:hover {
+        background: color-mix(in oklch, var(--color-brand-500) 12%, white);
+      }
+
+      .status {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: calc(var(--radius-2) * 0.8);
+        padding: 0 var(--spacing-2);
+        height: 1.5rem;
+        font-size: var(--text-scale-0);
+        font-weight: 600;
+        background: color-mix(in oklch, var(--color-brand-500) 18%, transparent);
+        color: color-mix(in oklch, var(--color-brand-500) 85%, var(--color-neutral-900));
+        border: 1px solid color-mix(in oklch, var(--color-brand-500) 35%, transparent);
+      }
+
+      .footer {
+        display: flex;
+        justify-content: space-between;
+        font-size: var(--text-scale-0);
+        color: color-mix(in oklch, var(--color-neutral-900) 60%, white);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="sheet" aria-label="Work package grid sample">
+        <div class="toolbar">
+          <h1>Operational Snapshot</h1>
+          <div class="filters">
+            <span class="pill"><strong>Status:</strong> Active</span>
+            <span class="pill"><strong>Region:</strong> AMER</span>
+            <span class="pill"><strong>Owner:</strong> Unassigned</span>
+          </div>
+        </div>
+
+        <div class="grid-container" role="table" aria-label="Excel-like table">
+          <div class="header-row" role="row">
+            <span role="columnheader">ID</span>
+            <span role="columnheader">Name</span>
+            <span role="columnheader">Owner</span>
+            <span role="columnheader">Phase</span>
+            <span role="columnheader">Start</span>
+            <span role="columnheader">End</span>
+            <span role="columnheader">Status</span>
+            <span role="columnheader">Score</span>
+          </div>
+
+          <div class="grid-body">
+            <div class="grid-row" role="row">
+              <span role="cell">WP-1182</span>
+              <span role="cell">Turbine Alignment Review</span>
+              <span role="cell">D. Richards</span>
+              <span role="cell">Execution</span>
+              <span role="cell">04/01</span>
+              <span role="cell">04/06</span>
+              <span role="cell"><span class="status">On Track</span></span>
+              <span role="cell">98%</span>
+            </div>
+            <div class="grid-row" role="row">
+              <span role="cell">WP-1183</span>
+              <span role="cell">Blade Surface Audit</span>
+              <span role="cell">M. Ortega</span>
+              <span role="cell">Review</span>
+              <span role="cell">04/02</span>
+              <span role="cell">04/05</span>
+              <span role="cell"><span class="status">On Track</span></span>
+              <span role="cell">94%</span>
+            </div>
+            <div class="grid-row" role="row">
+              <span role="cell">WP-1184</span>
+              <span role="cell">Tower Fastener Sweep</span>
+              <span role="cell">S. Patel</span>
+              <span role="cell">Execution</span>
+              <span role="cell">04/03</span>
+              <span role="cell">04/07</span>
+              <span role="cell"><span class="status">On Track</span></span>
+              <span role="cell">89%</span>
+            </div>
+            <div class="grid-row" role="row">
+              <span role="cell">WP-1185</span>
+              <span role="cell">Inverter QA Checklist</span>
+              <span role="cell">Unassigned</span>
+              <span role="cell">Planning</span>
+              <span role="cell">04/04</span>
+              <span role="cell">04/10</span>
+              <span role="cell"><span class="status">Queued</span></span>
+              <span role="cell">72%</span>
+            </div>
+            <div class="grid-row" role="row">
+              <span role="cell">WP-1186</span>
+              <span role="cell">Access Road Inspection</span>
+              <span role="cell">L. Chen</span>
+              <span role="cell">Execution</span>
+              <span role="cell">04/05</span>
+              <span role="cell">04/08</span>
+              <span role="cell"><span class="status">At Risk</span></span>
+              <span role="cell">65%</span>
+            </div>
+            <div class="grid-row" role="row">
+              <span role="cell">WP-1187</span>
+              <span role="cell">Control Center Sync</span>
+              <span role="cell">A. Ibrahim</span>
+              <span role="cell">Review</span>
+              <span role="cell">04/05</span>
+              <span role="cell">04/09</span>
+              <span role="cell"><span class="status">On Track</span></span>
+              <span role="cell">91%</span>
+            </div>
+            <div class="grid-row" role="row">
+              <span role="cell">WP-1188</span>
+              <span role="cell">Grounding Integrity Test</span>
+              <span role="cell">K. Alvarez</span>
+              <span role="cell">Execution</span>
+              <span role="cell">04/06</span>
+              <span role="cell">04/11</span>
+              <span role="cell"><span class="status">On Track</span></span>
+              <span role="cell">87%</span>
+            </div>
+            <div class="grid-row" role="row">
+              <span role="cell">WP-1189</span>
+              <span role="cell">SCADA Delta Analysis</span>
+              <span role="cell">N. Spencer</span>
+              <span role="cell">Planning</span>
+              <span role="cell">04/07</span>
+              <span role="cell">04/12</span>
+              <span role="cell"><span class="status">Queued</span></span>
+              <span role="cell">58%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer">
+          <span>8 rows · 12 columns selected</span>
+          <span>Last sync: 4 minutes ago</span>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

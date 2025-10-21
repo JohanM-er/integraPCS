@@ -1,6 +1,6 @@
-import { Task } from './Task';
 import { Command, CreateWorkPackageCommand, AddTaskCommand, ReportDailyProgressCommand } from './commands/Commands';
 import { DomainEvent, WorkPackageCreated, TaskAdded, DailyProgressReported } from './events/DomainEvents';
+import { Task } from './Task';
 
 export class WorkPackageAggregate {
   readonly id: string;

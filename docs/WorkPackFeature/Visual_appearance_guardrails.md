@@ -10,14 +10,14 @@ Visual appearance guardrails setup
 
 Use Tailwind v4 `@theme` to define color/spacing/type once. This becomes the only allowed palette. ([Tailwind CSS](https://tailwindcss.com/docs/theme?utm_source=chatgpt.com "Theme variables - Core concepts"))
 
-`src/styles/tokens.css`
+`packages/design-tokens/src/tokens.css`
 
 ```css
 @import "tailwindcss";
 
 @theme {
   /* colors */
-  --color-brand-500: oklch(0.72 0.11 178);
+  --color-brand-500: oklch(0.6728 0.0888 232.28);
   --color-neutral-50:  oklch(0.98 0.01 95);
   --color-neutral-900: oklch(0.21 0.02 95);
 
@@ -35,27 +35,39 @@ Use Tailwind v4 `@theme` to define color/spacing/type once. This becomes the onl
   --text-scale-0: 0.875rem;
   --text-scale-1: 1rem;
   --text-scale-2: 1.125rem;
+  --font-size-sm: var(--text-scale-0);
+  --font-size-base: var(--text-scale-1);
+  --font-size-lg: var(--text-scale-2);
   --radius-2: 0.5rem;
   --shadow-1: 0 1px 2px rgb(0 0 0 / 0.06);
 }
+```
+
+The Vite app simply re-exports this package in `frontend/src/styles/tokens.css`:
+
+```css
+@import "@integrapcs/design-tokens/tokens.css";
 ```
 
 Now only classes like `bg-brand-500`, `text-neutral-900`, `p-4`, `rounded-2` are valid and discoverable. ([Tailwind CSS](https://tailwindcss.com/docs/theme?utm_source=chatgpt.com "Theme variables - Core concepts"))
 
 # 2) ESLint guardrails for Tailwind usage
 Block arbitrary values and unknown classnames. Enforce class sorting.
-`.eslintrc.cjs`
+`frontend/eslint.config.js`
 
-```js
-module.exports = {
-  extends: ["next/core-web-vitals", "plugin:jsx-a11y/recommended"],
-  plugins: ["tailwindcss"],
+```ts
+// excerpt
+{
+  files: ['**/*.{ts,tsx}'],
+  plugins: {
+    tailwindcss: tailwindPlugin
+  },
   rules: {
-    "tailwindcss/no-arbitrary-value": "error",
-    "tailwindcss/no-custom-classname": ["error", { whitelist: [] }],
-    "tailwindcss/classnames-order": "warn"
+    'tailwindcss/no-arbitrary-value': 'error',
+    'tailwindcss/no-custom-classname': ['error', { whitelist: [] }],
+    'tailwindcss/classnames-order': 'warn'
   }
-};
+}
 ```
 
 - `no-arbitrary-value` forbids `bg-[#123456]`, `p-[13px]`.
@@ -71,11 +83,15 @@ Catches unknown at-rules and keeps any needed CSS sane.
 
 ```js
 module.exports = {
-  extends: ["stylelint-config-recommended", "stylelint-config-tailwindcss"],
+  extends: ['stylelint-config-recommended', 'stylelint-config-tailwindcss'],
+  rules: {
+    'color-function-notation': null
+  },
+  ignoreFiles: ['**/dist/**', '**/node_modules/**']
 };
 ```
 
-This combo understands `@tailwind`, `@layer`, `@apply`. ([npm](https://www.npmjs.com/package/stylelint-config-tailwindcss?utm_source=chatgpt.com "stylelint-config-tailwindcss"))
+Extending the Tailwind preset keeps `@tailwind`, `@layer`, and `@apply` valid while the extra rule allows our OKLCH palette. ([npm](https://www.npmjs.com/package/stylelint-config-tailwindcss?utm_source=chatgpt.com "stylelint-config-tailwindcss"))
 
 # 4) Prettier + sorting
 
@@ -87,32 +103,46 @@ Install Prettier and the Tailwind class sorter so diffs stay clean.
 (Prettier plugin sorts utilities; complements the ESLint rule.) ([Wisp](https://www.wisp.blog/blog/best-practices-for-using-tailwind-css-in-large-projects?utm_source=chatgpt.com "Best Practices for Using Tailwind CSS in Large Projects"))
 
 # 5) Component library + visual tests
-- Build canonical components in Storybook.
+- Build canonical components in Storybook (`frontend/.storybook/`). The default button story looks like this:
+
+    ```ts
+    export const Primary = { args: { variant: 'primary', children: 'Primary Action' } };
+    ```
+
 - Use Chromatic for CI visual regression on PRs.  
     `.github/workflows/chromatic.yml`
     
-```yaml
-name: chromatic
-on: [push, pull_request]
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: 20 }
-      - run: npm ci
-      - run: npm run build-storybook
-      - uses: chromaui/action@v1
-        with:
-          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-```
+    ```yaml
+    name: chromatic
+    on:
+      pull_request:
+      push:
+        branches:
+          - main
+    jobs:
+      chromatic:
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v4
+          - uses: actions/setup-node@v4
+            with:
+              node-version: 20
+          - run: npm install
+          - run: npm run build:shared --if-present
+          - run: npm run storybook:build -w frontend
+          - uses: chromaui/action@v1
+            with:
+              projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+              workingDir: frontend
+    ```
 
 This auto-publishes Storybook and blocks regressions. ([chromatic.com](https://www.chromatic.com/docs/github-actions/?utm_source=chatgpt.com "Automate Chromatic with GitHub Actions"))
-Optional page-level snapshots with Playwright:
+
+Complement Chromatic with high-signal Playwright snapshots when a full page scenario matters:
 
 ```ts
 import { test, expect } from '@playwright/test';
+
 test('home layout', async ({ page }) => {
   await page.goto('/');
   await expect(page).toHaveScreenshot('home.png');
@@ -128,48 +158,41 @@ If design owns tokens in Figma, sync via Style Dictionary to emit CSS variables 
 # 7) CI enforcement
 
 Use Husky + lint-staged to block non-conforming diffs.
-`package.json` (excerpt)
+`frontend/package.json` (excerpt)
 
 ```json
 {
   "scripts": {
-    "lint": "eslint . --ext .ts,.tsx,.js && stylelint \"**/*.{css,pcss}\"",
-    "format": "prettier -w .",
-    "test:ui": "playwright test -c tests/ui",
-    "typecheck": "tsc --noEmit"
+    "lint": "eslint . && stylelint \"src/**/*.{css}\"",
+    "lint:fix": "eslint . --fix && stylelint \"src/**/*.{css}\" --fix",
+    "lint:css": "stylelint \"src/**/*.{css}\"",
+    "storybook": "storybook dev -p 6006",
+    "storybook:build": "storybook build",
+    "chromatic": "chromatic --project-token $CHROMATIC_PROJECT_TOKEN"
   },
   "lint-staged": {
-    "*.{ts,tsx,js}": ["eslint --fix"],
-    "*.{css,pcss}": ["stylelint --fix"],
-    "*": ["prettier -w"]
+    "*.{js,jsx}": ["eslint --fix", "prettier --write"],
+    "*.{ts,tsx}": ["eslint --fix", "prettier --write"],
+    "*.{css}": ["stylelint --fix", "prettier --write"],
+    "*.{json,md}": "prettier --write"
   }
 }
 ```
 
 CI job order: install → `typecheck` → `lint` → `format:check` → Storybook build → Chromatic → Playwright.
 
-# 8) `AGENT.md` (instructions for AI codegen)
+# 8) `AGENTS.md` (instructions for AI codegen)
 
-Put this in repo root. It prevents drift.
-
-`AGENT.md`
+The repo root `AGENTS.md` mirrors these guardrails so human and AI contributors share one contract:
 
 ```
-Objective: Generate React + Tailwind UI that adheres to our design system with zero visual drift.
-
-Hard rules:
-1) Use only Tailwind utilities from the configured tokens in src/styles/tokens.css.
-2) Do NOT use inline styles, CSS-in-JS, or arbitrary values like p-[13px], bg-[#123456]. They fail lint.
-3) Use spacing {1,2,3,4,6,8}. Use text-scale {0,1,2}. Use color {brand-500, neutral-50, neutral-900}. No others.
-4) Components must be composed from our library in /src/components when available.
-5) Class order does not matter to you. Prettier sorts it.
-6) Accessibility: include roles, labels, focus states; prefer semantic elements; images need alt.
-7) Output only code. No commentary.
-
-Allowed examples:
-- OK: <button class="px-4 py-2 rounded-2 bg-brand-500 text-neutral-50 shadow-1">...</button>
-- BAD: <button style="padding:13px;background:#123456">...</button>
-- BAD: <div class="mt-[3px] text-[#333]">...</div>
+## Visual guardrails for generated UI
+- Use only Tailwind utilities backed by @integrapcs/design-tokens (`bg-brand-500`, `p-4`, `rounded-2`, etc.).
+- No inline styles or Tailwind arbitrary values like p-[13px] or text-[#333]; ESLint + Stylelint will fail them.
+- Spacing tokens: {1,2,3,4,6,8}. Typography tokens: {text-scale-0,text-scale-1,text-scale-2}. Radius: rounded-2. Shadow: shadow-1.
+- Prefer composing existing components from src/components (e.g., Button) before hand-rolling new markup.
+- Uphold accessibility: semantic elements, explicit labels, focus states, alt text on images.
+- Ship a matching Storybook story whenever you introduce a new visual component.
 ```
 
 Lint rules backstop these constraints. ([npm](https://www.npmjs.com/package/eslint-plugin-tailwindcss?utm_source=chatgpt.com "eslint-plugin-tailwindcss"))

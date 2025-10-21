@@ -7,7 +7,7 @@ export interface GraphQLContext extends Record<string, unknown> {
 
 async function* serverTimeGenerator(): AsyncGenerator<{ serverTime: string }> {
   // Emit current ISO time every second
-  // eslint-disable-next-line no-constant-condition
+   
   while (true) {
     yield { serverTime: new Date().toISOString() };
     await new Promise((resolve) => setTimeout(resolve, 1000));

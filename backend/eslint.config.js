@@ -27,7 +27,7 @@ module.exports = [
         ecmaVersion: 2022,
         sourceType: 'module',
         project: './tsconfig.json',
-        tsconfigRootDir: '.'
+        tsconfigRootDir: __dirname
       },
       globals: {
         ...globals.node,

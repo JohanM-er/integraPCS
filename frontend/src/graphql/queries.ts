@@ -5,10 +5,12 @@ export const GET_WORK_PACKAGE = gql`
     workPackage(id: $id) {
       id
       name
-      tasks { id title status }
+      tasks {
+        id
+        title
+        status
+      }
       lastUpdatedAt
     }
   }
 `;
-
-

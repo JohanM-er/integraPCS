@@ -40,7 +40,7 @@ const wsLink =
           on: {
             connected: () => console.log('[GraphQL WS] Connected'),
             closed: () => console.log('[GraphQL WS] Closed'),
-            error: (error) => console.error('[GraphQL WS] Error:', error)
+            error: error => console.error('[GraphQL WS] Error:', error)
           }
         })
       )
@@ -74,10 +74,7 @@ const splitLink = wsLink
   ? split(
       ({ query }) => {
         const definition = getMainDefinition(query);
-        return (
-          definition.kind === 'OperationDefinition' &&
-          definition.operation === 'subscription'
-        );
+        return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
       },
       wsLink,
       httpLink

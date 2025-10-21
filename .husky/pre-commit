@@ -183,21 +183,31 @@ check_import_statements() {
     log_info "Validating import statements (flagging require())..."
 
     if [ -n "$JS_TS_FILES" ]; then
-        REQUIRE_ISSUES=$(echo "$JS_TS_FILES" | xargs grep -l "require(" 2>/dev/null || true)
+        # Exclude config files that legitimately use CommonJS
+        SRC_FILES=$(echo "$JS_TS_FILES" | grep -vE '(\.config\.(js|cjs|ts)|\.stylelintrc\.|jest\.setup\.|\.husky/|storybook-static/)' || true)
 
-        if [ -n "$REQUIRE_ISSUES" ]; then
-            log_warning "Found require() statements that should be ES module imports:"
-            echo "$REQUIRE_ISSUES" | head -10 | while read -r file; do
-                echo "  📁 $file"
-                grep -n "require(" "$file" | head -3 | while read -r line; do
-                    echo "    🔍 $line"
-                done
-            done
-            log_info "Convert require() to ES6 import statements"
+        if [ -n "$SRC_FILES" ]; then
+            REQUIRE_ISSUES=$(echo "$SRC_FILES" | xargs grep -l "require(" 2>/dev/null || true)
+
+            if [ -n "$REQUIRE_ISSUES" ]; then
+                log_warning "Found require() statements that should be ES module imports:"
+                echo "$REQUIRE_ISSUES" | head -10 | while read -r file; do
+                    if [ -f "$file" ]; then
+                        echo "  📁 $file"
+                        grep -n "require(" "$file" 2>/dev/null | head -3 | while read -r line; do
+                            echo "    🔍 $line"
+                        done || true
+                    fi
+                done || true
+                log_info "Convert require() to ES6 import statements"
+            else
+                log_success "No problematic require() statements found"
+            fi
         else
-            log_success "No problematic require() statements found"
+            log_success "No source files to check for require() statements"
         fi
     fi
+    return 0
 }
 
 # Run all checks

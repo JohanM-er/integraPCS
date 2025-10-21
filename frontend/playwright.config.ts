@@ -66,7 +66,7 @@ export default defineConfig({
         ...devices['iPhone 13']
       }
     }
-  ],
+  ]
 
   // Do not auto-start a web server; assume frontend/backend are already running
   // Uncomment this to auto-start dev server:

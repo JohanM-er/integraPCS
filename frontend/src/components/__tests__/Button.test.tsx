@@ -45,21 +45,25 @@ describe('Button', () => {
     expect(screen.getByRole('button')).toHaveClass('bg-brand-500');
 
     rerender(<Button variant="secondary">Secondary</Button>);
-    expect(screen.getByRole('button')).toHaveClass('bg-neutral-200');
+    expect(screen.getByRole('button')).toHaveClass('bg-neutral-50');
+    expect(screen.getByRole('button')).toHaveClass('border-neutral-900/15');
 
     rerender(<Button variant="ghost">Ghost</Button>);
-    expect(screen.getByRole('button')).toHaveClass('hover:bg-neutral-100');
+    expect(screen.getByRole('button')).toHaveClass('hover:bg-neutral-900/10');
   });
 
   it('should apply size classes', () => {
     const { rerender } = render(<Button size="sm">Small</Button>);
-    expect(screen.getByRole('button')).toHaveClass('h-8');
+    expect(screen.getByRole('button')).toHaveClass('px-3');
+    expect(screen.getByRole('button')).toHaveClass('py-1');
 
     rerender(<Button size="md">Medium</Button>);
-    expect(screen.getByRole('button')).toHaveClass('h-10');
+    expect(screen.getByRole('button')).toHaveClass('px-4');
+    expect(screen.getByRole('button')).toHaveClass('py-2');
 
     rerender(<Button size="lg">Large</Button>);
-    expect(screen.getByRole('button')).toHaveClass('h-12');
+    expect(screen.getByRole('button')).toHaveClass('px-4');
+    expect(screen.getByRole('button')).toHaveClass('py-3');
   });
 
   it('should merge custom className', () => {

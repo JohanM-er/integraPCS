@@ -84,7 +84,7 @@ File: `src/styles/tokens.css` (excerpt)
 
 @import "tailwindcss";
 @theme {
-  --color-brand-500: oklch(0.72 0.11 178);
+  --color-brand-500: oklch(0.6728 0.0888 232.28);
   --color-neutral-50:  oklch(0.98 0.01 95);
   --color-neutral-900: oklch(0.21 0.02 95);
   --spacing-1: 0.25rem;

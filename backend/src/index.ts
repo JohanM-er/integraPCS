@@ -1,21 +1,21 @@
 import 'dotenv/config';
+import { randomUUID } from 'crypto';
 import http from 'http';
-import express from 'express';
-import type { RequestHandler } from 'express';
+
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware, type ExpressContextFunctionArgument } from '@apollo/server/express4';
 import { makeExecutableSchema } from '@graphql-tools/schema';
-import { WebSocketServer } from 'ws';
+import express from 'express';
 import { useServer } from 'graphql-ws/lib/use/ws';
-import { randomUUID } from 'crypto';
+import { WebSocketServer } from 'ws';
 
+import { resolvers, type GraphQLContext } from './graphql/resolvers';
+import { typeDefs } from './graphql/typeDefs';
 import corsMiddleware from './middleware/cors';
 import { graphqlRateLimitMiddleware, closeRateLimiterRedis } from './middleware/rateLimiter';
 import { applySecurityHeaders } from './middleware/security';
-import { typeDefs } from './graphql/typeDefs';
-import { resolvers, type GraphQLContext } from './graphql/resolvers';
-import { logger } from './shared/logger';
 import { loadEnv } from './shared/env';
+import { logger } from './shared/logger';
 
 async function main(): Promise<void> {
   const env = loadEnv();
@@ -43,7 +43,7 @@ async function main(): Promise<void> {
   app.get('/ready', (_req, res) => res.status(200).json({ status: 'ok' }));
 
   // Rate limiting for GraphQL endpoint
-  app.use(env.GRAPHQL_PATH, graphqlRateLimitMiddleware as RequestHandler);
+  app.use(env.GRAPHQL_PATH, graphqlRateLimitMiddleware);
 
   // Apollo Server
   const apollo = new ApolloServer<GraphQLContext>({ schema });
@@ -114,8 +114,8 @@ async function main(): Promise<void> {
     });
   };
 
-  process.on('SIGINT', shutdown);
-  process.on('SIGTERM', shutdown);
+  process.on('SIGINT', () => void shutdown());
+  process.on('SIGTERM', () => void shutdown());
 }
 
 void main();
