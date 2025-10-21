@@ -88,7 +88,7 @@ const typePolicies: Record<string, TypePolicy> = {
       // Cursor-based pagination example
       workPackages: {
         keyArgs: ['filter', 'orderBy'],
-        merge(existing = { edges: [] as any[], pageInfo: {} }, incoming) {
+        merge(existing = { edges: [] as unknown[], pageInfo: {} }, incoming) {
           if (!existing?.edges?.length) return incoming;
           return {
             ...incoming,
