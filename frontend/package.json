@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint . && stylelint \"src/**/*.css\"",
+    "lint": "eslint src --max-warnings 0 && stylelint \"src/**/*.css\" --max-warnings 0 --allow-empty-input",
     "lint:fix": "eslint . --fix && stylelint \"src/**/*.css\" --fix",
     "lint:css": "stylelint \"src/**/*.css\"",
     "format": "prettier --write . --ignore-path .gitignore",

@@ -15,7 +15,7 @@ const __dirname = dirname(__filename);
 
 export default [
   // Ignore common build and dependency folders
-  { ignores: ['dist', 'node_modules'] },
+  { ignores: ['dist', 'node_modules', 'coverage', '.storybook-static', 'playwright-report', 'test-results', 'build'] },
 
   // Node/config files (e.g., Vite, Playwright, scripts)
   {
