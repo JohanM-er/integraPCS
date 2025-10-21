@@ -15,3 +15,6 @@ docker-compose.override.yml
 .env.docker
 # Keep the example file
 !docker-compose-full.yml.example
+# Lint caches
+.eslintcache
+.stylelintcache
