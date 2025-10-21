@@ -21,7 +21,7 @@ const __dirname = path.dirname(__filename);
 const REPO_ROOT = path.resolve(__dirname, '..');
 const TOKENS_FILE = path.join(REPO_ROOT, 'packages/design-tokens/src/tokens.css');
 const CVA_FILE = path.join(REPO_ROOT, 'frontend/src/lib/cva.ts');
-const OUTPUT_DIR = path.join(REPO_ROOT, 'docs/WorkPackFeature/demos');
+const OUTPUT_DIR = path.join(REPO_ROOT, 'docs/UI system/demos');
 
 console.log('🎨 Generating token demo files...\n');
 
@@ -426,6 +426,7 @@ ${buttonSizeStyles}
 
 // Main execution
 try {
+  fs.mkdirSync(OUTPUT_DIR, { recursive: true });
   console.log('📖 Reading design tokens from:', TOKENS_FILE);
   const tokensCSS = fs.readFileSync(TOKENS_FILE, 'utf-8');
   const tokens = parseTokensFromCSS(tokensCSS);

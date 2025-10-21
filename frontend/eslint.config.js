@@ -190,6 +190,16 @@ export default [
       'prefer-const': 'warn',
       '@typescript-eslint/no-inferrable-types': 'warn',
 
+      // Discourage inline styles in JSX; prefer tokens + CVA variants
+      'no-restricted-syntax': [
+        'warn',
+        {
+          selector: 'JSXAttribute[name.name="style"]',
+          message:
+            'Avoid inline style={...} in JSX. Prefer design tokens (Tailwind utilities) and CVA variants (see frontend/src/lib/cva.ts and docs/UI system/UI_Design_System_Enforcement.md). For legitimate exceptions (e.g., canvas/charts/third-party), use an ESLint disable comment with a brief rationale.'
+        }
+      ],
+
       // React hooks discipline
       'react-hooks/exhaustive-deps': 'error',
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],

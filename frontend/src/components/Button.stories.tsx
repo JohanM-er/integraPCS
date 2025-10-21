@@ -93,7 +93,7 @@ export const Disabled: Story = {
 // All Sizes Together
 export const AllSizes: Story = {
   render: () => (
-    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+    <div className="flex items-center gap-4">
       <Button variant="primary" size="sm">
         Small
       </Button>
@@ -110,7 +110,7 @@ export const AllSizes: Story = {
 // All Variants Together
 export const AllVariants: Story = {
   render: () => (
-    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+    <div className="flex flex-wrap gap-4">
       <Button variant="primary">Primary</Button>
       <Button variant="secondary">Secondary</Button>
       <Button variant="ghost">Ghost</Button>
