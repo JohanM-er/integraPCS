@@ -2,10 +2,11 @@
 #
 # Performs checks before allowing commits:
 # - Detects .only() in tests (BLOCKING)
+# - Detects Tailwind arbitrary values in className (BLOCKING)
+# - TypeScript compilation for staged .ts files (BLOCKING)
+# - Validates imports (flags require() usage in source files) (BLOCKING)
 # - Checks for console.log statements in tests (WARNING)
 # - Validates test naming/structure (WARNING)
-# - TypeScript compilation for staged .ts files (WARNING)
-# - Validates imports (flags require() usage) (WARNING)
 #
 # Removed from schedNeoOrg template for integraPCS POC:
 # - Test categorization / pattern usage checks
@@ -171,7 +172,8 @@ check_typescript_compilation() {
         if [ "$TYPECHECK_FAILED" -eq 0 ]; then
             log_success "TypeScript compilation passed"
         else
-            ((WARNINGS++))
+            log_error "TypeScript compilation failed - fix errors before committing"
+            return 1
         fi
     else
         log_info "No staged TypeScript files detected"
@@ -190,7 +192,7 @@ check_import_statements() {
             REQUIRE_ISSUES=$(echo "$SRC_FILES" | xargs grep -l "require(" 2>/dev/null || true)
 
             if [ -n "$REQUIRE_ISSUES" ]; then
-                log_warning "Found require() statements that should be ES module imports:"
+                log_error "Found require() statements that should be ES module imports:"
                 echo "$REQUIRE_ISSUES" | head -10 | while read -r file; do
                     if [ -f "$file" ]; then
                         echo "  📁 $file"
@@ -200,6 +202,7 @@ check_import_statements() {
                     fi
                 done || true
                 log_info "Convert require() to ES6 import statements"
+                return 1
             else
                 log_success "No problematic require() statements found"
             fi
@@ -210,16 +213,53 @@ check_import_statements() {
     return 0
 }
 
+# New check: block Tailwind arbitrary values in className strings within frontend/src
+check_tailwind_arbitrary_values() {
+    log_info "Checking for Tailwind arbitrary values (p-[...], text-[#...], etc.) in staged frontend source files..."
+
+    FRONTEND_SRC_FILES=$(echo "$STAGED_FILES" | grep -E '^frontend/src/.*\.(ts|tsx|jsx|js)$' 2>/dev/null || true)
+
+    if [ -z "$FRONTEND_SRC_FILES" ]; then
+        log_info "No staged frontend source files to scan for Tailwind arbitrary values"
+        return 0
+    fi
+
+    VIOLATIONS=0
+
+    for file in $FRONTEND_SRC_FILES; do
+        if [ -f "$file" ]; then
+            # Scan only lines that include className to reduce false positives
+            if grep -n "className" "$file" 2>/dev/null | grep -nE "\[[^]]+\]" >/dev/null 2>&1; then
+                log_error "Found Tailwind arbitrary value(s) in: $file"
+                # Show up to 3 offending lines for quick fixes
+                grep -n "className" "$file" 2>/dev/null | grep -nE "\[[^]]+\]" | head -3 | sed 's/^/    🔍 /'
+                VIOLATIONS=1
+            fi
+        fi
+    done
+
+    if [ "$VIOLATIONS" -eq 1 ]; then
+        echo ""
+        log_info "Replace arbitrary values (e.g., p-[13px], text-[#333]) with approved tokenized utilities."
+        echo "See Visual Guardrails in docs for allowed classes."
+        return 1
+    else
+        log_success "No Tailwind arbitrary values found"
+        return 0
+    fi
+}
+
 # Run all checks
 echo ""
 echo "🚀 Running pre-commit quality checks..."
 echo "======================================"
 
 check_test_only || exit 1  # Blocking check
+check_tailwind_arbitrary_values || exit 1  # Blocking check
+check_typescript_compilation || exit 1  # Blocking check
+check_import_statements || exit 1  # Blocking check
 check_console_logs
 check_test_naming
-check_typescript_compilation
-check_import_statements
 
 echo ""
 echo "======================================"
