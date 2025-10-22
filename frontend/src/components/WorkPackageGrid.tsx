@@ -45,6 +45,9 @@ export interface WorkPackageGridProps extends React.HTMLAttributes<HTMLDivElemen
   density?: TableVariants['density'];
   borders?: TableVariants['borders'];
   headerTone?: TableVariants['headerTone'];
+  striped?: boolean;
+  hoverable?: boolean;
+  selectable?: boolean;
   stickyHeader?: boolean;
   showFooter?: boolean;
   ariaLabel?: string;
@@ -91,6 +94,9 @@ export const WorkPackageGrid = forwardRef<HTMLDivElement, WorkPackageGridProps>(
       density = 'normal',
       borders = 'row',
       headerTone = 'default',
+      striped = false,
+      hoverable = true,
+      selectable = true,
       stickyHeader = false,
       showFooter = true,
       ariaLabel,
@@ -129,12 +135,22 @@ export const WorkPackageGrid = forwardRef<HTMLDivElement, WorkPackageGridProps>(
           <table
             aria-label={ariaLabel || title || 'Work package grid'}
             aria-labelledby={titleId}
-            className={cx('w-full', tableVariants({ density, borders, headerTone }))}
+            className={cx(
+              'w-full',
+              tableVariants({
+                density,
+                borders,
+                headerTone,
+                striped: striped ? 'on' : 'off',
+                hoverable: hoverable ? 'on' : 'off',
+                selectable: selectable ? 'on' : 'off'
+              })
+            )}
           >
             <thead
               className={cx(
                 stickyHeader && 'sticky top-0',
-                stickyHeader && headerTone === 'none' && 'bg-neutral-50'
+                stickyHeader && headerTone === 'none' && 'bg-surface-table-header'
               )}
             >
               <tr>
@@ -168,7 +184,7 @@ export const WorkPackageGrid = forwardRef<HTMLDivElement, WorkPackageGridProps>(
               {rows.map((r) => (
                 <tr
                   key={r.id}
-                  className={cx('hover:bg-neutral-900/10', onRowClick && 'cursor-pointer')}
+                  className={cx(onRowClick && 'cursor-pointer')}
                   onClick={() => onRowClick?.(r)}
                 >
                   <td className="px-3">{r.id}</td>

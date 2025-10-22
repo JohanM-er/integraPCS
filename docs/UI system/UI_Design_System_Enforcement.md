@@ -60,7 +60,7 @@ This repository enforces design system practices through a combination of docume
 
 5) Design token foundation
 - Package: packages/design-tokens/src/tokens.css
-  - Tailwind v4 @theme block defines limited tokens for color, spacing, typography (including shared line-height), radius, and shadow.
+  - Tailwind v4 @theme block defines limited tokens for color, spacing, typography (including shared line-height), table surfaces/borders, radius, and shadow.
   - The specific values live in the design instructions (`UI_Design_System_Instructions.md`); enforcement revolves around consuming those tokens rather than recreating utilities by hand.
   - No build step required; they are plain CSS.
 - Frontend consumption
@@ -77,22 +77,17 @@ This repository enforces design system practices through a combination of docume
     - panelVariants: tone {default, brand, inverse}; padding {none, sm, md, lg}; emphasis {true/false}
     - pillVariants: tone {neutral, brand}; interactive {true/false}
     - inputVariants: size {sm, md, lg}; invalid {true/false}
-    - tableVariants: density {compact, normal, spacious}; borders {row, all, none}; headerTone {default, none}
+    - tableVariants: density {compact, normal, spacious}; borders {row, all, none}; headerTone {default, none}; striped {on, off}; hoverable {on, off}; selectable {on, off}
       - Typography scale baked in: `compact` → `text-sm` (12px), `normal` → `text-base` (14px), `spacious` → `text-lg` (16px)
       - Density also sets table cell padding via spacing tokens: `compact` → `py-1`, `normal` → `py-2`, `spacious` → `py-3`
+      - Header/border styling is token-driven (`bg-surface-table`, `bg-surface-table-header`, `border-table`) rather than custom `color-mix` values
+      - Row striping, hover, and selection states consume the shared row tokens; reviewers should reject bespoke background utilities in tables. Note: default usage leaves striping off—only enable it intentionally.
       - Connected components (e.g., WorkPackageGrid badges) scale in lockstep with density (`sm`/`md`/`lg`)
   - Example usage in components: Button.tsx uses buttonVariants to enforce design system variants at the component level.
 - Enforcement status
   - Adoption of CVA variants is encouraged and documented. There is no automated lint rule forcing usage across arbitrary components; compliance relies on convention and code review.
 
-7) Visual system demos
-- Script: scripts/generate-token-demos.mjs
-  - Reads live tokens and button sizes from CVA to generate docs/WorkPackFeature/demos/limited-token-guidelines.html.
-  - Demonstrates token values and CVA-driven size mapping.
-- Enforcement status
-  - Manual tool; not wired into CI to enforce freshness or fail on drift.
-
-8) What is hard vs. soft enforced today
+7) What is hard vs. soft enforced today
 - Hard enforcement
   - Pre-commit blocks:
     - Tailwind arbitrary values in className strings (frontend/src only).

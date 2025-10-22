@@ -196,7 +196,7 @@ export type InputVariants = VariantProps<typeof inputVariants>;
  * Table shell variants
  * - Controls density, borders, and header tone
  */
-export const tableVariants = cva('', {
+export const tableVariants = cva('bg-surface-table text-fg-table border border-table', {
   variants: {
     density: {
       compact: '[&_td]:py-1 [&_td]:text-sm [&_th]:py-1 [&_th]:text-sm',
@@ -204,19 +204,35 @@ export const tableVariants = cva('', {
       spacious: '[&_td]:py-3 [&_td]:text-lg [&_th]:py-3 [&_th]:text-lg'
     },
     borders: {
-      row: '[&_tr]:border-b [&_tr]:border-neutral-900/15',
-      all: 'border-neutral-900/15 [&_td]:border [&_th]:border',
+      row: '[&_tr]:border-b [&_tr]:border-table',
+      all: 'border border-table [&_td]:border [&_td]:border-table [&_th]:border [&_th]:border-table',
       none: ''
     },
     headerTone: {
-      default: '[&_th]:bg-neutral-900/10 [&_th]:text-neutral-900',
+      default:
+        '[&_thead]:bg-surface-table-header [&_th]:bg-surface-table-header [&_th]:text-fg-table-header',
       none: ''
+    },
+    striped: {
+      on: '[&_tbody>tr:nth-child(even)>td]:bg-surface-table-muted',
+      off: ''
+    },
+    hoverable: {
+      on: '[&_tbody>tr:hover>td]:bg-surface-table-row-hover',
+      off: ''
+    },
+    selectable: {
+      on: '[&_tbody>tr[aria-selected="true"]>td]:bg-surface-table-row-selected',
+      off: ''
     }
   },
   defaultVariants: {
-    density: 'compact',
+    density: 'normal',
     borders: 'row',
-    headerTone: 'default'
+    headerTone: 'default',
+    striped: 'off',
+    hoverable: 'on',
+    selectable: 'on'
   }
 });
 

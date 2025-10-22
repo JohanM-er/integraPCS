@@ -4,7 +4,11 @@
   /* Core palette */
   --color-brand-500: oklch(0.6728 0.0888 232.28);
   --color-neutral-50: oklch(0.98 0.01 95);
+  --color-neutral-75: #f6f6f6;
+  --color-neutral-100: #f0f0f0;
+  --color-neutral-150: #e2e2e2;
   --color-neutral-900: oklch(0.21 0.02 95);
+  --color-neutral-0: #ffffff;
 
   /* Spacing scale */
   --spacing-0: 0;
@@ -30,7 +34,55 @@
   --text-base--line-height: 1.3;
   --text-lg--line-height: 1.3;
 
+  /* Table surfaces */
+  --color-surface-table: var(--color-neutral-0);
+  --color-surface-table-header: var(--color-neutral-100);
+  --color-surface-table-muted: var(--color-neutral-75);
+  --color-surface-table-row-hover: var(--color-neutral-75);
+  --color-surface-table-row-selected: var(--color-neutral-150);
+  --color-border-table: var(--color-neutral-150);
+
+  --color-fg-table: var(--color-neutral-900);
+  --color-fg-table-header: var(--color-neutral-900);
+
+  /* Optional aliases */
+  --surface-table: var(--color-surface-table);
+  --surface-table-header: var(--color-surface-table-header);
+  --surface-table-muted: var(--color-surface-table-muted);
+  --surface-table-row-hover: var(--color-surface-table-row-hover);
+  --surface-table-row-selected: var(--color-surface-table-row-selected);
+  --border-table: var(--color-border-table);
+  --fg-table: var(--color-fg-table);
+  --fg-table-header: var(--color-fg-table-header);
+
   /* Shape + elevation */
   --radius-2: 0.5rem; /* 8px */
   --shadow-1: 0 1px 2px rgb(0 0 0 / 0.06);
+
+  /* Presence overlays */
+  --presence-color: oklch(0.82 0.12 180);
+  --presence-outline: 2px;
+  --presence-fill-alpha: 18%;
+}
+
+@supports (color: oklch(0 0 0)) {
+  :root {
+    --color-surface-table: var(--color-neutral-0);
+    --color-surface-table-header: var(--color-neutral-100);
+    --color-surface-table-muted: var(--color-neutral-75);
+    --color-surface-table-row-hover: var(--color-neutral-75);
+    --color-surface-table-row-selected: var(--color-neutral-150);
+    --color-border-table: var(--color-neutral-150);
+  }
+}
+
+[data-theme="dark"] {
+  --color-surface-table: color-mix(in oklch, var(--color-neutral-0) 6%, black);
+  --color-surface-table-header: color-mix(in oklch, var(--color-neutral-0) 8%, black);
+  --color-surface-table-muted: color-mix(in oklch, var(--color-surface-table) 105%, var(--color-neutral-0));
+  --color-surface-table-row-hover: color-mix(in oklch, var(--color-surface-table) 90%, var(--color-neutral-0));
+  --color-surface-table-row-selected: color-mix(in oklch, var(--color-surface-table) 70%, var(--color-neutral-0));
+  --color-border-table: color-mix(in oklch, var(--color-neutral-0) 16%, transparent);
+  --color-fg-table: oklch(0.88 0 0);
+  --color-fg-table-header: oklch(0.9 0 0);
 }

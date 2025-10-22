@@ -39,7 +39,10 @@
 - Use Node.js 20+ to match workspace `engines` and avoid type incompatibilities during CI.
 
 ## Visual Guardrails
-- Import `@integrapcs/design-tokens/tokens.css` (or the `frontend/src/styles/tokens.css` re-export) before authoring UI. Allowed utilities: `bg-brand-500`, `text-neutral-900`, spacing `{1,2,3,4,5,6}` (~2,3,4,8,12,18px), typography `text-sm` (12px), `text-base` (14px), `text-lg` (16px) with shared `line-height:1.3`, `rounded-2`, `shadow-1`.
+- Import `@integrapcs/design-tokens/tokens.css` (or the `frontend/src/styles/tokens.css` re-export) before authoring UI. Allowed utilities: `bg-brand-500`, `text-neutral-900`, spacing `{1,2,3,4,5,6}` (~2,3,4,8,12,18px), typography `text-sm` (12px), `text-base` (14px), `text-lg` (16px) with shared `line-height:1.3`, `rounded-2`, `shadow-1`, table surfaces `bg-surface-table`/`bg-surface-table-muted`, and `border-table`.
+- Doc map:
+  - `docs/UI system/UI_Design_System_Instructions.md` – token usage, spacing, tables, presence overlays, and implementation checklist.
+  - `docs/UI system/UI_Design_System_Enforcement.md` – describes pre-commit, CI, and CVA guardrails that enforce the system.
 - Do not use inline styles or Tailwind arbitrary values (e.g., `p-[13px]`, `text-[#333]`). The pre-commit hook blocks these in staged frontend source; Prettier orders classlists.
 - CI enforces the no-arbitrary-values policy using `npm run check:tailwind`. The check mirrors the pre-commit hook and only scans `className` lines in `frontend/src`. For temporary exceptions, add entries to `scripts/config/tailwind-arbitrary-allowlist.json` (include a clear `reason` and remove the entry promptly).
 - Prefer composing existing components in `src/components` rather than bespoke markup.
