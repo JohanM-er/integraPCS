@@ -39,7 +39,7 @@
 - Use Node.js 20+ to match workspace `engines` and avoid type incompatibilities during CI.
 
 ## Visual Guardrails
-- Import `@integrapcs/design-tokens/tokens.css` (or the `frontend/src/styles/tokens.css` re-export) before authoring UI. Allowed utilities: `bg-brand-500`, `text-neutral-900`, spacing `{1,2,3,4,6,8}`, typography `{text-scale-0, text-scale-1, text-scale-2}`, `rounded-2`, `shadow-1`.
+- Import `@integrapcs/design-tokens/tokens.css` (or the `frontend/src/styles/tokens.css` re-export) before authoring UI. Allowed utilities: `bg-brand-500`, `text-neutral-900`, spacing `{1,2,3,4,6,8}`, typography `text-sm` (10px), `text-base` (12px), `text-lg` (14px), `rounded-2`, `shadow-1`.
 - Do not use inline styles or Tailwind arbitrary values (e.g., `p-[13px]`, `text-[#333]`). The pre-commit hook blocks these in staged frontend source; Prettier orders classlists.
 - CI enforces the no-arbitrary-values policy using `npm run check:tailwind`. The check mirrors the pre-commit hook and only scans `className` lines in `frontend/src`. For temporary exceptions, add entries to `scripts/config/tailwind-arbitrary-allowlist.json` (include a clear `reason` and remove the entry promptly).
 - Prefer composing existing components in `src/components` rather than bespoke markup.

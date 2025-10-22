@@ -84,17 +84,23 @@ export type CardVariants = VariantProps<typeof cardVariants>;
  * Example: Badge component variants
  */
 export const badgeVariants = cva(
-  'inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold tracking-wide uppercase',
+  'inline-flex items-center justify-center rounded-full',
   {
     variants: {
       variant: {
         neutral: 'bg-neutral-900/10 text-neutral-900',
         brand: 'bg-brand-500 text-neutral-50',
         inverse: 'bg-neutral-900 text-neutral-50'
+      },
+      size: {
+        sm: 'px-1.5 py-0 text-sm min-w-10',
+        md: 'px-2 py-0.5 text-base min-w-16',
+        lg: 'px-2.5 py-0.5 text-lg min-w-18'
       }
     },
     defaultVariants: {
-      variant: 'neutral'
+      variant: 'neutral',
+      size: 'md'
     }
   }
 );
@@ -193,9 +199,9 @@ export type InputVariants = VariantProps<typeof inputVariants>;
 export const tableVariants = cva('', {
   variants: {
     density: {
-      compact: 'text-sm [&_td]:py-2 [&_th]:py-2',
-      normal: 'text-base [&_td]:py-3 [&_th]:py-3',
-      spacious: 'text-lg [&_td]:py-4 [&_th]:py-4'
+      compact: '[&_td]:py-0 [&_td]:text-sm [&_th]:py-0 [&_th]:text-sm',
+      normal: '[&_td]:py-1 [&_td]:text-sm [&_th]:py-1 [&_th]:text-sm',
+      spacious: '[&_td]:py-2 [&_td]:text-sm [&_th]:py-2 [&_th]:text-sm'
     },
     borders: {
       row: '[&_tr]:border-b [&_tr]:border-neutral-900/15',
@@ -215,3 +221,59 @@ export const tableVariants = cva('', {
 });
 
 export type TableVariants = VariantProps<typeof tableVariants>;
+
+export const toolbarVariants = cva(
+  'flex items-center justify-between gap-4',
+  {
+    variants: {
+      padding: {
+        sm: 'p-2',
+        md: 'p-4',
+        lg: 'p-6'
+      },
+      border: {
+        none: '',
+        bottom: 'border-b border-neutral-900/15'
+      },
+      tone: {
+        default: '',
+        muted: 'bg-neutral-900/10'
+      }
+    },
+    defaultVariants: {
+      padding: 'md',
+      border: 'bottom',
+      tone: 'default'
+    }
+  }
+);
+
+export type ToolbarVariants = VariantProps<typeof toolbarVariants>;
+
+export const footerVariants = cva(
+  'flex items-center justify-between text-sm',
+  {
+    variants: {
+      padding: {
+        sm: 'p-2',
+        md: 'p-4',
+        lg: 'p-6'
+      },
+      border: {
+        none: '',
+        top: 'border-t border-neutral-900/15'
+      },
+      tone: {
+        default: '',
+        muted: 'bg-neutral-900/10'
+      }
+    },
+    defaultVariants: {
+      padding: 'sm',
+      border: 'top',
+      tone: 'default'
+    }
+  }
+);
+
+export type FooterVariants = VariantProps<typeof footerVariants>;

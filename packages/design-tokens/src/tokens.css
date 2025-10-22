@@ -17,13 +17,13 @@
 
   /* Typography scale */
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  --text-scale-0: 0.875rem; /* 14px */
-  --text-scale-1: 1rem;     /* 16px */
-  --text-scale-2: 1.125rem; /* 18px */
+  --text-scale-0: 0.625rem; /* 10px */
+  --text-scale-1: 0.75rem;  /* 12px */
+  --text-scale-2: 0.875rem; /* 14px */
 
-  --font-size-sm: var(--text-scale-0);
-  --font-size-base: var(--text-scale-1);
-  --font-size-lg: var(--text-scale-2);
+  --text-sm: var(--text-scale-0);   /* 10px */
+  --text-base: var(--text-scale-1); /* 12px */
+  --text-lg: var(--text-scale-2);   /* 14px */
 
   /* Shape + elevation */
   --radius-2: 0.5rem; /* 8px */
