@@ -41,6 +41,11 @@ Token-based design system with utility-first CSS
       --text-sm: var(--text-scale-0);   
       --text-base: var(--text-scale-1); 
       --text-lg: var(--text-scale-2);   
+
+      /* System-wide line heights */
+      --text-sm--line-height: 1.3;
+      --text-base--line-height: 1.3;
+      --text-lg--line-height: 1.3;
     }
     ```
 - Semantic utilities → rendered sizes
@@ -48,6 +53,11 @@ Token-based design system with utility-first CSS
   - `text-base` 
   - `text-lg` 
   - Always prefer semantic utilities so components inherit global typography from design tokens.
+
+**Global line-height (1.3)**
+- Every text utility resolves `line-height: 1.3` via the `--text-*--line-height` tokens; verify by inspecting any `.text-base` element in devtools.
+- Global adjustments belong in `packages/design-tokens/src/tokens.css`; update the line-height tokens there rather than overriding individual components.
+- After changing tokens, regenerate the visual demos (`npm run generate:demos`) so the static HTML stays in sync.
 
 - Developer guidance
   - Do:
@@ -58,4 +68,5 @@ Token-based design system with utility-first CSS
     - Introducing extra text sizes
   - Verification tips:
     - In devtools, `.text-sm` should resolve to `font-size: var(--text-sm);` and compute to 12px.
+    - Line height should resolve to the shared `1.3` token (e.g., `.text-base` → `line-height: 1.3`).
     - Ensure the design-tokens stylesheet is imported before authoring UI so variables are available.

@@ -434,9 +434,9 @@ Tailwind v4 uses `@theme` directive in CSS for configuration.
   --color-error-500:   oklch(0.62 0.22 25);
 
   /* Spacing */
-  --spacing-1: 0.0625rem;  /* 1px */
-  --spacing-2: 0.125rem;   /* 2px */
-  --spacing-3: 0.1875rem;  /* 3px */
+  --spacing-1: 0.125rem;   /* 2px */
+  --spacing-2: 0.1875rem;  /* 3px */
+  --spacing-3: 0.25rem;    /* 4px */
   --spacing-4: 0.5rem;     /* 8px */
   --spacing-5: 0.75rem;    /* 12px */
   --spacing-6: 1.125rem;   /* 18px */

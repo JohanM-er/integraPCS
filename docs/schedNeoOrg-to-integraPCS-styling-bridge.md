@@ -222,6 +222,7 @@ export function CompactTableWrapper({ children }: { children: React.ReactNode })
 
 - Density presets map directly onto the typography scale: `compact` → `text-sm` (12px), `normal` → `text-base` (14px), `spacious` → `text-lg` (16px).
 - Status badges inherit size from the active density so their footprint tracks the table: `compact` → `size="sm"`, `normal` → `size="md"`, `spacious` → `size="lg"`.
+- Row padding follows the spacing tokens: `compact` → `py-1`, `normal` → `py-2`, `spacious` → `py-3`.
 
 ---
 

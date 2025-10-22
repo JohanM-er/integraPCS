@@ -355,7 +355,7 @@ ${buttonSizeStyles}
               <tbody>
                 <tr>
                   <td><code>--spacing-3</code></td>
-                  <td>${tokens['spacing-3'] || '0.1875rem'}</td>
+                  <td>${tokens['spacing-3'] || '0.25rem'}</td>
                 </tr>
                 <tr>
                   <td><code>--spacing-4</code></td>
