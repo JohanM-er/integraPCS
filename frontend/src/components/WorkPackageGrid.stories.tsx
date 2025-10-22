@@ -1,4 +1,10 @@
-import { WorkPackageGrid, type WorkPackageRow, type GridFilter, type GridMetadata } from './WorkPackageGrid';
+import {
+  WorkPackageGrid,
+  type WorkPackageRow,
+  type GridFilter,
+  type GridMetadata
+} from './WorkPackageGrid';
+
 import type { Meta, StoryObj } from '@storybook/react';
 
 const sampleRows: WorkPackageRow[] = [
@@ -143,7 +149,8 @@ export const WithStickyHeader: Story = {
   args: {
     stickyHeader: true
   },
-  render: (args) => (
+  render: args => (
+    // eslint-disable-next-line no-restricted-syntax -- Storybook demo: constrained viewport needed to show sticky header behavior
     <div style={{ width: '48rem', height: '24rem', overflow: 'auto' }}>
       <WorkPackageGrid {...args} />
     </div>

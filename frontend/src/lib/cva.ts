@@ -83,27 +83,24 @@ export type CardVariants = VariantProps<typeof cardVariants>;
 /**
  * Example: Badge component variants
  */
-export const badgeVariants = cva(
-  'inline-flex items-center justify-center rounded-full',
-  {
-    variants: {
-      variant: {
-        neutral: 'bg-neutral-900/10 text-neutral-900',
-        brand: 'bg-brand-500 text-neutral-50',
-        inverse: 'bg-neutral-900 text-neutral-50'
-      },
-      size: {
-        sm: 'px-1.5 py-0 text-sm min-w-10',
-        md: 'px-2 py-0.5 text-base min-w-16',
-        lg: 'px-2.5 py-0.5 text-lg min-w-18'
-      }
+export const badgeVariants = cva('inline-flex items-center justify-center rounded-full', {
+  variants: {
+    variant: {
+      neutral: 'bg-neutral-900/10 text-neutral-900',
+      brand: 'bg-brand-500 text-neutral-50',
+      inverse: 'bg-neutral-900 text-neutral-50'
     },
-    defaultVariants: {
-      variant: 'neutral',
-      size: 'md'
+    size: {
+      sm: 'px-1.5 py-0 text-sm min-w-10',
+      md: 'px-2 py-0.5 text-base min-w-16',
+      lg: 'px-2.5 py-0.5 text-lg min-w-18'
     }
+  },
+  defaultVariants: {
+    variant: 'neutral',
+    size: 'md'
   }
-);
+});
 
 export type BadgeVariants = VariantProps<typeof badgeVariants>;
 
@@ -238,58 +235,52 @@ export const tableVariants = cva('bg-surface-table text-fg-table border border-t
 
 export type TableVariants = VariantProps<typeof tableVariants>;
 
-export const toolbarVariants = cva(
-  'flex items-center justify-between gap-4',
-  {
-    variants: {
-      padding: {
-        sm: 'p-2',
-        md: 'p-4',
-        lg: 'p-6'
-      },
-      border: {
-        none: '',
-        bottom: 'border-b border-neutral-900/15'
-      },
-      tone: {
-        default: '',
-        muted: 'bg-neutral-900/10'
-      }
+export const toolbarVariants = cva('flex items-center justify-between gap-4', {
+  variants: {
+    padding: {
+      sm: 'p-2',
+      md: 'p-4',
+      lg: 'p-6'
     },
-    defaultVariants: {
-      padding: 'md',
-      border: 'bottom',
-      tone: 'default'
+    border: {
+      none: '',
+      bottom: 'border-b border-neutral-900/15'
+    },
+    tone: {
+      default: '',
+      muted: 'bg-neutral-900/10'
     }
+  },
+  defaultVariants: {
+    padding: 'md',
+    border: 'bottom',
+    tone: 'default'
   }
-);
+});
 
 export type ToolbarVariants = VariantProps<typeof toolbarVariants>;
 
-export const footerVariants = cva(
-  'flex items-center justify-between text-sm',
-  {
-    variants: {
-      padding: {
-        sm: 'p-2',
-        md: 'p-4',
-        lg: 'p-6'
-      },
-      border: {
-        none: '',
-        top: 'border-t border-neutral-900/15'
-      },
-      tone: {
-        default: '',
-        muted: 'bg-neutral-900/10'
-      }
+export const footerVariants = cva('flex items-center justify-between text-sm', {
+  variants: {
+    padding: {
+      sm: 'p-2',
+      md: 'p-4',
+      lg: 'p-6'
     },
-    defaultVariants: {
-      padding: 'sm',
-      border: 'top',
-      tone: 'default'
+    border: {
+      none: '',
+      top: 'border-t border-neutral-900/15'
+    },
+    tone: {
+      default: '',
+      muted: 'bg-neutral-900/10'
     }
+  },
+  defaultVariants: {
+    padding: 'sm',
+    border: 'top',
+    tone: 'default'
   }
-);
+});
 
 export type FooterVariants = VariantProps<typeof footerVariants>;

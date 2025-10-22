@@ -97,18 +97,34 @@ export const StatusBadges: Story = {
   render: () => (
     <div className="flex flex-col gap-4">
       <div className="flex items-center gap-2">
-        <span className="text-sm w-24">Default:</span>
-        <Badge variant="brand" size="md">On Track</Badge>
-        <Badge variant="neutral" size="md">At Risk</Badge>
-        <Badge variant="neutral" size="md">Blocked</Badge>
-        <Badge variant="neutral" size="md">Complete</Badge>
+        <span className="w-24 text-sm">Default:</span>
+        <Badge variant="brand" size="md">
+          On Track
+        </Badge>
+        <Badge variant="neutral" size="md">
+          At Risk
+        </Badge>
+        <Badge variant="neutral" size="md">
+          Blocked
+        </Badge>
+        <Badge variant="neutral" size="md">
+          Complete
+        </Badge>
       </div>
       <div className="flex items-center gap-2">
-        <span className="text-sm w-24">Small (Grid):</span>
-        <Badge variant="brand" size="sm">On Track</Badge>
-        <Badge variant="neutral" size="sm">At Risk</Badge>
-        <Badge variant="neutral" size="sm">Blocked</Badge>
-        <Badge variant="neutral" size="sm">Complete</Badge>
+        <span className="w-24 text-sm">Small (Grid):</span>
+        <Badge variant="brand" size="sm">
+          On Track
+        </Badge>
+        <Badge variant="neutral" size="sm">
+          At Risk
+        </Badge>
+        <Badge variant="neutral" size="sm">
+          Blocked
+        </Badge>
+        <Badge variant="neutral" size="sm">
+          Complete
+        </Badge>
       </div>
     </div>
   )
@@ -119,21 +135,39 @@ export const MinWidthConsistency: Story = {
   render: () => (
     <div className="flex flex-col gap-4">
       <div>
-        <p className="text-sm mb-2 text-neutral-900">Small badges have min-width for consistency:</p>
+        <p className="mb-2 text-sm text-neutral-900">
+          Small badges have min-width for consistency:
+        </p>
         <div className="flex items-center gap-2">
-          <Badge variant="brand" size="sm">A</Badge>
-          <Badge variant="brand" size="sm">OK</Badge>
-          <Badge variant="brand" size="sm">Done</Badge>
-          <Badge variant="brand" size="sm">Active</Badge>
+          <Badge variant="brand" size="sm">
+            A
+          </Badge>
+          <Badge variant="brand" size="sm">
+            OK
+          </Badge>
+          <Badge variant="brand" size="sm">
+            Done
+          </Badge>
+          <Badge variant="brand" size="sm">
+            Active
+          </Badge>
         </div>
       </div>
       <div>
-        <p className="text-sm mb-2 text-neutral-900">Medium badges:</p>
+        <p className="mb-2 text-sm text-neutral-900">Medium badges:</p>
         <div className="flex items-center gap-2">
-          <Badge variant="brand" size="md">A</Badge>
-          <Badge variant="brand" size="md">OK</Badge>
-          <Badge variant="brand" size="md">Done</Badge>
-          <Badge variant="brand" size="md">Active</Badge>
+          <Badge variant="brand" size="md">
+            A
+          </Badge>
+          <Badge variant="brand" size="md">
+            OK
+          </Badge>
+          <Badge variant="brand" size="md">
+            Done
+          </Badge>
+          <Badge variant="brand" size="md">
+            Active
+          </Badge>
         </div>
       </div>
     </div>

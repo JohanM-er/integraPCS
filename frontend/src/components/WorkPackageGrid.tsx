@@ -1,5 +1,5 @@
 import { forwardRef, useId } from 'react';
-import { cx } from '@/lib/cx';
+
 import {
   panelVariants,
   pillVariants,
@@ -10,6 +10,7 @@ import {
   type BadgeVariants,
   type TableVariants
 } from '@/lib/cva';
+import { cx } from '@/lib/cx';
 
 export interface WorkPackageRow {
   id: string;
@@ -110,10 +111,12 @@ export const WorkPackageGrid = forwardRef<HTMLDivElement, WorkPackageGridProps>(
     return (
       <div ref={ref} className={cx(panelVariants(), className)} {...rest}>
         <header className={toolbarVariants({ padding: 'md', border: 'bottom', tone: 'default' })}>
-          <h2 id={titleId} className="text-base font-semibold text-neutral-900">{title}</h2>
+          <h2 id={titleId} className="text-base font-semibold text-neutral-900">
+            {title}
+          </h2>
           {filters.length > 0 ? (
             <div className="flex flex-wrap items-center gap-2">
-              {filters.map((f) => (
+              {filters.map(f => (
                 <button
                   key={f.id}
                   type="button"
@@ -181,7 +184,7 @@ export const WorkPackageGrid = forwardRef<HTMLDivElement, WorkPackageGridProps>(
               </tr>
             </thead>
             <tbody>
-              {rows.map((r) => (
+              {rows.map(r => (
                 <tr
                   key={r.id}
                   className={cx(onRowClick && 'cursor-pointer')}
@@ -192,8 +195,8 @@ export const WorkPackageGrid = forwardRef<HTMLDivElement, WorkPackageGridProps>(
                     {onRowClick ? (
                       <button
                         type="button"
-                        className="font-medium text-left rounded-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
-                        onClick={(e) => {
+                        className="rounded-2 focus-visible:ring-brand-500 text-left font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                        onClick={e => {
                           e.stopPropagation();
                           onRowClick(r);
                         }}
@@ -209,7 +212,12 @@ export const WorkPackageGrid = forwardRef<HTMLDivElement, WorkPackageGridProps>(
                   <td className="px-3">{formatDate(r.start)}</td>
                   <td className="px-3">{formatDate(r.end)}</td>
                   <td className="px-3">
-                    <span className={badgeVariants({ variant: statusToBadgeVariant(r.status), size: densityToBadgeSize(density) })}>
+                    <span
+                      className={badgeVariants({
+                        variant: statusToBadgeVariant(r.status),
+                        size: densityToBadgeSize(density)
+                      })}
+                    >
                       {r.status}
                     </span>
                   </td>
