@@ -33,14 +33,12 @@
         --font-size-2xl: 1.5rem;
         --font-size-3xl: 1.875rem;
         --spacing-0: 0;
-        --spacing-1: 0.25rem;
-        --spacing-2: 0.5rem;
-        --spacing-3: 0.75rem;
-        --spacing-4: 1rem;
-        --spacing-6: 1.5rem;
-        --spacing-8: 2rem;
-        --spacing-12: 3rem;
-        --spacing-16: 4rem;
+        --spacing-1: 0.0625rem;
+        --spacing-2: 0.125rem;
+        --spacing-3: 0.1875rem;
+        --spacing-4: 0.5rem;
+        --spacing-5: 0.75rem;
+        --spacing-6: 1.125rem;
         --radius-sm: 0.25rem;
         --radius-md: 0.5rem;
         --radius-xl: 1rem;
@@ -130,15 +128,15 @@
       section {
         background: white;
         border-radius: var(--radius-xl);
-        padding: var(--spacing-12);
+        padding: calc(var(--spacing-6) + var(--spacing-5));
         display: grid;
-        gap: var(--spacing-8);
+        gap: var(--spacing-6);
         box-shadow: var(--shadow-sm);
       }
 
       .split {
         display: grid;
-        gap: var(--spacing-8);
+        gap: var(--spacing-6);
       }
 
       @media (min-width: 56rem) {
@@ -279,7 +277,7 @@
           <div>
             <h2>Layered storytelling with expanded spacing</h2>
             <p class="lead">
-              Headings jump from 3xl heroes to xl section leads. Stacks breathe with 12 and 16 spacing
+              Headings jump from 3xl heroes to xl section leads. Stacks breathe with 8 and 13 spacing
               steps, creating calm white space that is impossible with the tighter guide.
             </p>
           </div>
@@ -299,10 +297,10 @@
           <div class="swatch-row">
             <div class="swatch">
               <strong>Spacing</strong>
+              <span class="pill">0.1875rem</span>
+              <span class="pill">0.5rem</span>
               <span class="pill">0.75rem</span>
-              <span class="pill">1.5rem</span>
-              <span class="pill">3rem</span>
-              <span class="pill">4rem</span>
+              <span class="pill">1.125rem</span>
             </div>
             <div class="swatch">
               <strong>Typography</strong>

@@ -8,22 +8,22 @@
 
   /* Spacing scale */
   --spacing-0: 0;
-  --spacing-1: 0.25rem; /* 4px */
-  --spacing-2: 0.5rem;  /* 8px */
-  --spacing-3: 0.75rem; /* 12px */
-  --spacing-4: 1rem;    /* 16px */
-  --spacing-6: 1.5rem;  /* 24px */
-  --spacing-8: 2rem;    /* 32px */
+  --spacing-1: 0.0625rem;  /* 1px */
+  --spacing-2: 0.125rem;   /* 2px */
+  --spacing-3: 0.1875rem; /* 3px */
+  --spacing-4: 0.5rem;    /* 8px */
+  --spacing-5: 0.75rem;   /* 12px */
+  --spacing-6: 1.125rem;  /* 18px */
 
   /* Typography scale */
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  --text-scale-0: 0.625rem; /* 10px */
-  --text-scale-1: 0.75rem;  /* 12px */
-  --text-scale-2: 0.875rem; /* 14px */
+  --text-scale-0: 0.75rem;  /* 12px */
+  --text-scale-1: 0.875rem; /* 14px */
+  --text-scale-2: 1rem;     /* 16px */
 
-  --text-sm: var(--text-scale-0);   /* 10px */
-  --text-base: var(--text-scale-1); /* 12px */
-  --text-lg: var(--text-scale-2);   /* 14px */
+  --text-sm: var(--text-scale-0);   /* 12px */
+  --text-base: var(--text-scale-1); /* 14px */
+  --text-lg: var(--text-scale-2);   /* 16px */
 
   /* Shape + elevation */
   --radius-2: 0.5rem; /* 8px */

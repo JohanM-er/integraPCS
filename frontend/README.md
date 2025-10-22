@@ -87,9 +87,12 @@ File: `src/styles/tokens.css` (excerpt)
   --color-brand-500: oklch(0.6728 0.0888 232.28);
   --color-neutral-50:  oklch(0.98 0.01 95);
   --color-neutral-900: oklch(0.21 0.02 95);
-  --spacing-1: 0.25rem;
-  --spacing-2: 0.5rem;
-  --spacing-4: 1rem;
+  --spacing-1: 0.0625rem;
+  --spacing-2: 0.125rem;
+  --spacing-3: 0.1875rem;
+  --spacing-4: 0.5rem;
+  --spacing-5: 0.75rem;
+  --spacing-6: 1.125rem;
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   --text-scale-1: 1rem;
   --radius-2: 0.5rem;

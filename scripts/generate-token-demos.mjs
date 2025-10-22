@@ -130,9 +130,9 @@ ${cssVariables}
       main {
         max-width: 60rem;
         margin: 0 auto;
-        padding: var(--spacing-8) var(--spacing-4);
+        padding: var(--spacing-6) var(--spacing-4);
         display: grid;
-        gap: var(--spacing-8);
+        gap: var(--spacing-6);
       }
 
       header {
@@ -355,15 +355,15 @@ ${buttonSizeStyles}
               <tbody>
                 <tr>
                   <td><code>--spacing-3</code></td>
-                  <td>${tokens['spacing-3'] || '0.75rem'}</td>
+                  <td>${tokens['spacing-3'] || '0.1875rem'}</td>
                 </tr>
                 <tr>
                   <td><code>--spacing-4</code></td>
-                  <td>${tokens['spacing-4'] || '1rem'}</td>
+                  <td>${tokens['spacing-4'] || '0.5rem'}</td>
                 </tr>
                 <tr>
                   <td><code>--spacing-6</code></td>
-                  <td>${tokens['spacing-6'] || '1.5rem'}</td>
+                  <td>${tokens['spacing-6'] || '1.125rem'}</td>
                 </tr>
               </tbody>
             </table>
@@ -383,15 +383,15 @@ ${buttonSizeStyles}
               <tbody>
                 <tr>
                   <td><code>--text-scale-0</code></td>
-                  <td>${tokens['text-scale-0'] || '0.875rem'}</td>
+                  <td>${tokens['text-scale-0'] || '0.75rem'}</td>
                 </tr>
                 <tr>
                   <td><code>--text-scale-1</code></td>
-                  <td>${tokens['text-scale-1'] || '1rem'}</td>
+                  <td>${tokens['text-scale-1'] || '0.875rem'}</td>
                 </tr>
                 <tr>
                   <td><code>--text-scale-2</code></td>
-                  <td>${tokens['text-scale-2'] || '1.125rem'}</td>
+                  <td>${tokens['text-scale-2'] || '1rem'}</td>
                 </tr>
               </tbody>
             </table>

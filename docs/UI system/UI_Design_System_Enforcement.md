@@ -61,7 +61,7 @@ This repository enforces design system practices through a combination of docume
 5) Design token foundation
 - Package: packages/design-tokens/src/tokens.css
   - Tailwind v4 @theme block defines limited tokens for color, spacing, typography scale, radius, and shadow.
-  - Tokens are intended to be the source of allowed utilities (e.g., bg-brand-500, text-neutral-900, spacing scale {1,2,3,4,6,8}, type scale {0..2}, rounded-2, shadow-1).
+  - Tokens are intended to be the source of allowed utilities (e.g., bg-brand-500, text-neutral-900, spacing scale {1,2,3,4,5,6} ≈ {1,2,3,8,12,18px}, type scale {0..2}, rounded-2, shadow-1).
   - No build step required; they are plain CSS.
 - Frontend consumption
   - The frontend imports tokens (directly or via a local re-export) to ensure the utilities resolve under Tailwind v4’s token model.
@@ -78,6 +78,8 @@ This repository enforces design system practices through a combination of docume
     - pillVariants: tone {neutral, brand}; interactive {true/false}
     - inputVariants: size {sm, md, lg}; invalid {true/false}
     - tableVariants: density {compact, normal, spacious}; borders {row, all, none}; headerTone {default, none}
+      - Typography scale baked in: `compact` → `text-sm` (12px), `normal` → `text-base` (14px), `spacious` → `text-lg` (16px)
+      - Connected components (e.g., WorkPackageGrid badges) scale in lockstep with density (`sm`/`md`/`lg`)
   - Example usage in components: Button.tsx uses buttonVariants to enforce design system variants at the component level.
 - Enforcement status
   - Adoption of CVA variants is encouraged and documented. There is no automated lint rule forcing usage across arbitrary components; compliance relies on convention and code review.

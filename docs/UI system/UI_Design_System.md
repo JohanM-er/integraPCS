@@ -33,9 +33,9 @@ Token-based design system with utility-first CSS
     ```css
     @theme {
       /* Tokenized scale */
-      --text-scale-0: 0.625rem;
-      --text-scale-1: 0.75rem; 
-      --text-scale-2: 0.875rem;
+      --text-scale-0: 0.75rem;
+      --text-scale-1: 0.875rem; 
+      --text-scale-2: 1rem;
 
       /* Tailwind v4 semantic hooks */
       --text-sm: var(--text-scale-0);   
@@ -44,9 +44,9 @@ Token-based design system with utility-first CSS
     }
     ```
 - Semantic utilities → rendered sizes
-  - `text-sm` → 10px
-  - `text-base` → 12px
-  - `text-lg` → 14px
+  - `text-sm` 
+  - `text-base` 
+  - `text-lg` 
   - Always prefer semantic utilities so components inherit global typography from design tokens.
 
 - Developer guidance
@@ -57,5 +57,5 @@ Token-based design system with utility-first CSS
     - Arbitrary classes
     - Introducing extra text sizes
   - Verification tips:
-    - In devtools, `.text-sm` should resolve to `font-size: var(--text-sm);` and compute to 10px.
+    - In devtools, `.text-sm` should resolve to `font-size: var(--text-sm);` and compute to 12px.
     - Ensure the design-tokens stylesheet is imported before authoring UI so variables are available.

@@ -200,8 +200,8 @@ export const tableVariants = cva('', {
   variants: {
     density: {
       compact: '[&_td]:py-0 [&_td]:text-sm [&_th]:py-0 [&_th]:text-sm',
-      normal: '[&_td]:py-1 [&_td]:text-sm [&_th]:py-1 [&_th]:text-sm',
-      spacious: '[&_td]:py-2 [&_td]:text-sm [&_th]:py-2 [&_th]:text-sm'
+      normal: '[&_td]:py-1 [&_td]:text-base [&_th]:py-1 [&_th]:text-base',
+      spacious: '[&_td]:py-2 [&_td]:text-lg [&_th]:py-2 [&_th]:text-lg'
     },
     borders: {
       row: '[&_tr]:border-b [&_tr]:border-neutral-900/15',

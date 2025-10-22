@@ -60,10 +60,12 @@ function statusToBadgeVariant(status: WorkPackageStatus): BadgeVariants['variant
 function densityToBadgeSize(density: TableVariants['density']): BadgeVariants['size'] {
   switch (density) {
     case 'compact':
-    case 'normal':
-    case 'spacious':
-    default:
       return 'sm';
+    case 'spacious':
+      return 'lg';
+    case 'normal':
+    default:
+      return 'md';
   }
 }
 
