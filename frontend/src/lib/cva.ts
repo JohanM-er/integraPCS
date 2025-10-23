@@ -235,6 +235,33 @@ export const tableVariants = cva('bg-surface-table text-fg-table border border-t
 
 export type TableVariants = VariantProps<typeof tableVariants>;
 
+export const gridCellVariants = cva('px-3 align-middle', {
+  variants: {
+    align: {
+      left: 'text-left',
+      center: 'text-center',
+      right: 'text-right'
+    },
+    state: {
+      default: '',
+      selected: 'ring-2 ring-brand-500 ring-offset-2',
+      editing: 'ring-2 ring-brand-500 ring-offset-2 bg-surface-table-row-selected',
+      invalid: 'ring-2 ring-neutral-900 ring-offset-2'
+    },
+    interactive: {
+      on: 'cursor-pointer',
+      off: ''
+    }
+  },
+  defaultVariants: {
+    align: 'left',
+    state: 'default',
+    interactive: 'on'
+  }
+});
+
+export type GridCellVariants = VariantProps<typeof gridCellVariants>;
+
 export const toolbarVariants = cva('flex items-center justify-between gap-4', {
   variants: {
     padding: {

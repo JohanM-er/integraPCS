@@ -4,19 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "33170369a1562ddd",
+        "id": "179c7f5b62cfa713",
         "type": "tabs",
         "children": [
           {
-            "id": "663eb06fd93c015e",
+            "id": "b4083b29950ee43f",
             "type": "leaf",
             "state": {
-              "type": "image",
-              "state": {
-                "file": "visuals/database-design.svg"
-              },
-              "icon": "lucide-image",
-              "title": "database-design"
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "New tab"
             }
           }
         ]
@@ -158,6 +156,7 @@
   },
   "left-ribbon": {
     "hiddenItems": {
+      "bases:Create new base": false,
       "switcher:Open quick switcher": false,
       "graph:Open graph view": false,
       "canvas:Create new canvas": false,
@@ -166,8 +165,11 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "663eb06fd93c015e",
+  "active": "b4083b29950ee43f",
   "lastOpenFiles": [
+    "UI system/demos/limited-token-guidelines.html",
+    "UI system/Google_Sheets_Grid_Architecture.md",
+    "UI system/LineItemGrid_Architecture.md",
     "development-improvements/lineitem-move-retrospective-session-COMPLETE.md",
     "development-improvements/lineitem-move-retrospective-session.md",
     "development-improvements/lineitem-move-retrospective-logs.md",
