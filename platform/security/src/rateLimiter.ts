@@ -6,7 +6,7 @@ import RedisStore from 'rate-limit-redis';
  * Initialize Redis client for rate limiting
  */
 const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379', {
-  enableOfflineQueue: false,
+  enableOfflineQueue: true,
   maxRetriesPerRequest: 3
 });
 
