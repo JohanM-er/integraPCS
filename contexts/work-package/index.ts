@@ -1,0 +1,1 @@
+export * as WorkPackageGraphQL from './src/interfaces/graphql';

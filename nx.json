@@ -1,0 +1,28 @@
+{
+  "extends": "nx/presets/npm.json",
+  "namedInputs": {
+    "default": [
+      "{projectRoot}/**/*",
+      "!{projectRoot}/generated/**/*"
+    ]
+  },
+  "targetDefaults": {
+    "build": {
+      "cache": true
+    },
+    "test": {
+      "cache": true
+    },
+    "lint": {
+      "cache": true
+    },
+    "typecheck": {
+      "cache": true
+    }
+  },
+  "plugins": [],
+  "workspaceLayout": {
+    "appsDir": "apps",
+    "libsDir": "."
+  }
+}

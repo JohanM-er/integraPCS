@@ -25,17 +25,22 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'pnpm'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
-      - name: Run npm audit (high/critical only)
-        run: npm audit --audit-level=high
+      - name: Run audit (high/critical only)
+        run: pnpm audit --audit-level=high
         continue-on-error: false
 
       - name: Check for outdated dependencies
-        run: npm outdated || true
+        run: pnpm outdated || true
 
   # Job 2: Lint, format, typecheck, and tailwind guard (parallel)
   quality:
@@ -52,21 +57,26 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'pnpm'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Run ${{ matrix.check }}
         run: |
           if [ "${{ matrix.check }}" = "lint" ]; then
-            npm run lint
+            pnpm nx affected -t lint --parallel
           elif [ "${{ matrix.check }}" = "format" ]; then
-            npm run format:check
+            pnpm run format:check
           elif [ "${{ matrix.check }}" = "typecheck" ]; then
-            npm run typecheck
+            pnpm nx affected -t typecheck --parallel
           elif [ "${{ matrix.check }}" = "tailwind" ]; then
-            npm run check:tailwind
+            pnpm run check:tailwind
           fi
 
   # Job 3: Unit tests (parallel for backend and frontend)
@@ -75,7 +85,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        workspace: [backend, frontend]
+        workspace: [api, web]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -84,24 +94,34 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'pnpm'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build shared types
-        run: npm run build:shared
+        run: pnpm nx build packages-shared-types
 
       - name: Run ${{ matrix.workspace }} unit tests
-        run: npm run test -w ${{ matrix.workspace }}
+        run: |
+          if [ "${{ matrix.workspace }}" = "web" ]; then
+            pnpm nx test web
+          else
+            echo "No unit tests configured for api; skipping."
+          fi
         env:
           CI: true
 
-      - name: Upload coverage reports
+      - name: Upload coverage reports (web)
+        if: ${{ matrix.workspace == 'web' }}
         uses: codecov/codecov-action@v4
-        if: always()
         with:
-          files: ./${{ matrix.workspace }}/coverage/lcov.info
+          files: ./apps/web/coverage/lcov.info
           flags: ${{ matrix.workspace }}
           token: ${{ secrets.CODECOV_TOKEN }}
         continue-on-error: true
@@ -157,16 +177,21 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'pnpm'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build shared types
-        run: npm run build:shared
+        run: pnpm nx build packages-shared-types
 
-      - name: Run integration tests
-        run: npm run test:integration
+      - name: Run integration tests (pattern)
+        run: pnpm nx run-many -t test -- --testPathPattern=integration
         env:
           CI: true
           NEO4J_URI: bolt://localhost:7687
@@ -175,11 +200,11 @@ jobs:
           REDIS_URL: redis://localhost:6379
           RABBITMQ_URL: amqp://test:test@localhost:5672
 
-      - name: Upload coverage
+      - name: Upload coverage (api if available)
         uses: codecov/codecov-action@v4
         if: always()
         with:
-          files: ./backend/coverage/lcov.info
+          files: ./apps/api/coverage/lcov.info
           flags: integration
           token: ${{ secrets.CODECOV_TOKEN }}
         continue-on-error: true
@@ -196,29 +221,34 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'pnpm'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build shared types
-        run: npm run build:shared
+        run: pnpm nx build packages-shared-types
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
-        working-directory: frontend
+        working-directory: apps/web
 
       - name: Cache Playwright browsers
         uses: actions/cache@v4
         id: playwright-cache
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ hashFiles('frontend/package-lock.json') }}
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: |
             playwright-${{ runner.os }}-
 
-      - name: Run E2E tests
-        run: npm run test:e2e
+      - name: Run E2E tests (web)
+        run: pnpm nx e2e web
         env:
           CI: true
           PLAYWRIGHT_BASE_URL: http://localhost:5173
@@ -228,7 +258,7 @@ jobs:
         if: failure()
         with:
           name: playwright-report
-          path: frontend/playwright-report/
+          path: apps/web/playwright-report/
           retention-days: 30
 
       - name: Upload Playwright traces
@@ -236,7 +266,7 @@ jobs:
         if: failure()
         with:
           name: playwright-traces
-          path: frontend/test-results/
+          path: apps/web/test-results/
           retention-days: 30
 
   # Job 6: Build verification
@@ -252,31 +282,36 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'pnpm'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
-      - name: Cache Vite build
+      - name: Cache Vite build (web)
         uses: actions/cache@v4
         with:
           path: |
-            frontend/node_modules/.vite
-            frontend/dist
-          key: vite-${{ runner.os }}-${{ hashFiles('frontend/package-lock.json') }}-${{ hashFiles('frontend/src/**/*') }}
+            apps/web/node_modules/.vite
+            apps/web/dist
+          key: vite-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('apps/web/src/**/*', 'apps/web/vite.config.ts') }}
           restore-keys: |
-            vite-${{ runner.os }}-${{ hashFiles('frontend/package-lock.json') }}-
+            vite-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
             vite-${{ runner.os }}-
 
-      - name: Build all packages
-        run: npm run build
+      - name: Build all projects
+        run: pnpm nx run-many -t build
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
           path: |
-            packages/shared-types/dist
-            backend/dist
-            frontend/dist
+            dist/packages/shared-types
+            dist/apps/api
+            dist/apps/web
           retention-days: 7

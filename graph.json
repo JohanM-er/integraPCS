@@ -1,0 +1,1133 @@
+{
+  "graph": {
+    "nodes": {
+      "@integrapcs/design-tokens": {
+        "name": "@integrapcs/design-tokens",
+        "type": "lib",
+        "data": {
+          "root": "packages/design-tokens",
+          "sourceRoot": "packages/design-tokens",
+          "name": "@integrapcs/design-tokens",
+          "tags": [
+            "npm:private"
+          ],
+          "metadata": {
+            "targetGroups": {}
+          },
+          "targets": {},
+          "implicitDependencies": []
+        }
+      },
+      "platform-observability": {
+        "name": "platform-observability",
+        "type": "lib",
+        "data": {
+          "root": "platform/observability",
+          "name": "platform-observability",
+          "sourceRoot": "platform/observability/src",
+          "tags": [
+            "scope:platform",
+            "type:lib"
+          ],
+          "targets": {
+            "build": {
+              "executor": "@nx/js:tsc",
+              "options": {
+                "main": "platform/observability/src/index.ts",
+                "outputPath": "dist/platform/observability",
+                "tsConfig": "platform/observability/tsconfig.json"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "typecheck": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "tsc --noEmit -p platform/observability/tsconfig.json"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "lint": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "echo \"No specific lint config for platform/observability yet\""
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "@integrapcs/shared-types": {
+        "name": "@integrapcs/shared-types",
+        "type": "lib",
+        "data": {
+          "root": "packages/shared-types",
+          "sourceRoot": "packages/shared-types",
+          "name": "@integrapcs/shared-types",
+          "tags": [
+            "npm:public",
+            "npm:types",
+            "npm:typescript",
+            "npm:integrapcs",
+            "npm:domain",
+            "npm:events"
+          ],
+          "metadata": {
+            "targetGroups": {
+              "NPM Scripts": [
+                "build",
+                "clean",
+                "typecheck",
+                "watch"
+              ]
+            },
+            "description": "Shared TypeScript types for integraPCS application"
+          },
+          "targets": {
+            "build": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "build"
+              },
+              "metadata": {
+                "scriptContent": "tsc",
+                "runCommand": "pnpm run build"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "clean": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "clean"
+              },
+              "metadata": {
+                "scriptContent": "rm -rf dist",
+                "runCommand": "pnpm run clean"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "typecheck": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "typecheck"
+              },
+              "metadata": {
+                "scriptContent": "tsc --noEmit",
+                "runCommand": "pnpm run typecheck"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "watch": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "watch"
+              },
+              "metadata": {
+                "scriptContent": "tsc --watch",
+                "runCommand": "pnpm run watch"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "nx-release-publish": {
+              "executor": "@nx/js:release-publish",
+              "dependsOn": [
+                "^nx-release-publish"
+              ],
+              "options": {},
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "contexts-work-package": {
+        "name": "contexts-work-package",
+        "type": "lib",
+        "data": {
+          "root": "contexts/work-package",
+          "name": "contexts-work-package",
+          "sourceRoot": "contexts/work-package/src",
+          "tags": [
+            "scope:context:work-package",
+            "layer:interfaces"
+          ],
+          "implicitDependencies": [
+            "shared-kernel",
+            "shared-patterns",
+            "shared-common",
+            "platform-db",
+            "platform-graphql"
+          ],
+          "targets": {
+            "build": {
+              "executor": "@nx/js:tsc",
+              "options": {
+                "main": "contexts/work-package/src/index.ts",
+                "outputPath": "dist/contexts/work-package",
+                "tsConfig": "contexts/work-package/tsconfig.lib.json"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "typecheck": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "tsc --noEmit -p contexts/work-package/tsconfig.lib.json"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "lint": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "echo \"No specific lint config for contexts/work-package yet\""
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            }
+          }
+        }
+      },
+      "platform-messaging": {
+        "name": "platform-messaging",
+        "type": "lib",
+        "data": {
+          "root": "platform/messaging",
+          "name": "platform-messaging",
+          "sourceRoot": "platform/messaging/src",
+          "tags": [
+            "scope:platform",
+            "type:lib"
+          ],
+          "targets": {
+            "build": {
+              "executor": "@nx/js:tsc",
+              "options": {
+                "main": "platform/messaging/src/index.ts",
+                "outputPath": "dist/platform/messaging",
+                "tsConfig": "platform/messaging/tsconfig.json"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "typecheck": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "tsc --noEmit -p platform/messaging/tsconfig.json"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "lint": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "echo \"No specific lint config for platform/messaging yet\""
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "platform-security": {
+        "name": "platform-security",
+        "type": "lib",
+        "data": {
+          "root": "platform/security",
+          "name": "platform-security",
+          "sourceRoot": "platform/security/src",
+          "tags": [
+            "scope:platform",
+            "type:lib"
+          ],
+          "targets": {
+            "build": {
+              "executor": "@nx/js:tsc",
+              "options": {
+                "main": "platform/security/src/index.ts",
+                "outputPath": "dist/platform/security",
+                "tsConfig": "platform/security/tsconfig.json"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "typecheck": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "tsc --noEmit -p platform/security/tsconfig.json"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "lint": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "echo \"No specific lint config for platform/security yet\""
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "platform-graphql": {
+        "name": "platform-graphql",
+        "type": "lib",
+        "data": {
+          "root": "platform/graphql",
+          "name": "platform-graphql",
+          "sourceRoot": "platform/graphql/src",
+          "tags": [
+            "scope:platform",
+            "type:lib"
+          ],
+          "targets": {
+            "build": {
+              "executor": "@nx/js:tsc",
+              "options": {
+                "main": "platform/graphql/src/index.ts",
+                "outputPath": "dist/platform/graphql",
+                "tsConfig": "platform/graphql/tsconfig.json"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "typecheck": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "tsc --noEmit -p platform/graphql/tsconfig.json"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "lint": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "echo \"No specific lint config for platform/graphql yet\""
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "platform-config": {
+        "name": "platform-config",
+        "type": "lib",
+        "data": {
+          "root": "platform/config",
+          "name": "platform-config",
+          "sourceRoot": "platform/config/src",
+          "tags": [
+            "scope:platform",
+            "type:lib"
+          ],
+          "targets": {
+            "build": {
+              "executor": "@nx/js:tsc",
+              "options": {
+                "main": "platform/config/src/index.ts",
+                "outputPath": "dist/platform/config",
+                "tsConfig": "platform/config/tsconfig.json"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "typecheck": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "tsc --noEmit -p platform/config/tsconfig.json"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "lint": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "echo \"No specific lint config for platform/config yet\""
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "shared-patterns": {
+        "name": "shared-patterns",
+        "type": "lib",
+        "data": {
+          "root": "shared/patterns",
+          "name": "shared-patterns",
+          "sourceRoot": "shared/patterns/src",
+          "tags": [
+            "scope:shared",
+            "type:lib"
+          ],
+          "targets": {
+            "build": {
+              "executor": "@nx/js:tsc",
+              "options": {
+                "main": "shared/patterns/src/index.ts",
+                "outputPath": "dist/shared/patterns",
+                "tsConfig": "shared/patterns/tsconfig.json"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "typecheck": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "tsc --noEmit -p shared/patterns/tsconfig.json"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "lint": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "echo \"No specific lint config for shared/patterns yet\""
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "platform-auth": {
+        "name": "platform-auth",
+        "type": "lib",
+        "data": {
+          "root": "platform/auth",
+          "name": "platform-auth",
+          "sourceRoot": "platform/auth/src",
+          "tags": [
+            "scope:platform",
+            "type:lib"
+          ],
+          "targets": {
+            "build": {
+              "executor": "@nx/js:tsc",
+              "options": {
+                "main": "platform/auth/src/index.ts",
+                "outputPath": "dist/platform/auth",
+                "tsConfig": "platform/auth/tsconfig.json"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "typecheck": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "tsc --noEmit -p platform/auth/tsconfig.json"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "lint": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "echo \"No specific lint config for platform/auth yet\""
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "shared-common": {
+        "name": "shared-common",
+        "type": "lib",
+        "data": {
+          "root": "shared/common",
+          "name": "shared-common",
+          "sourceRoot": "shared/common/src",
+          "tags": [
+            "scope:shared",
+            "type:lib"
+          ],
+          "targets": {
+            "build": {
+              "executor": "@nx/js:tsc",
+              "options": {
+                "main": "shared/common/src/index.ts",
+                "outputPath": "dist/shared/common",
+                "tsConfig": "shared/common/tsconfig.json"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "typecheck": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "tsc --noEmit -p shared/common/tsconfig.json"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "lint": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "echo \"No specific lint config for shared/common yet\""
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "shared-kernel": {
+        "name": "shared-kernel",
+        "type": "lib",
+        "data": {
+          "root": "shared/kernel",
+          "name": "shared-kernel",
+          "sourceRoot": "shared/kernel/src",
+          "tags": [
+            "scope:shared",
+            "type:lib",
+            "layer:domain"
+          ],
+          "targets": {
+            "build": {
+              "executor": "@nx/js:tsc",
+              "options": {
+                "main": "shared/kernel/src/index.ts",
+                "outputPath": "dist/shared/kernel",
+                "tsConfig": "shared/kernel/tsconfig.json"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "typecheck": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "tsc --noEmit -p shared/kernel/tsconfig.json"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "lint": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "echo \"No specific lint config for shared/kernel yet\""
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "platform-db": {
+        "name": "platform-db",
+        "type": "lib",
+        "data": {
+          "root": "platform/db",
+          "name": "platform-db",
+          "sourceRoot": "platform/db/src",
+          "tags": [
+            "scope:platform",
+            "type:lib"
+          ],
+          "targets": {
+            "build": {
+              "executor": "@nx/js:tsc",
+              "options": {
+                "main": "platform/db/src/index.ts",
+                "outputPath": "dist/platform/db",
+                "tsConfig": "platform/db/tsconfig.json"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "typecheck": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "tsc --noEmit -p platform/db/tsconfig.json"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "lint": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "echo \"No specific lint config for platform/db yet\""
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "frontend": {
+        "name": "frontend",
+        "type": "lib",
+        "data": {
+          "root": "frontend",
+          "sourceRoot": "frontend",
+          "name": "frontend",
+          "tags": [
+            "npm:private"
+          ],
+          "metadata": {
+            "targetGroups": {
+              "NPM Scripts": [
+                "dev",
+                "build",
+                "lint",
+                "lint:fix",
+                "lint:eslint",
+                "lint:fix:eslint",
+                "lint:css",
+                "lint:fix:css",
+                "format",
+                "typecheck",
+                "test",
+                "test:ui",
+                "test:e2e",
+                "test:e2e:ui",
+                "test:e2e:debug",
+                "coverage",
+                "preview",
+                "storybook",
+                "storybook:build",
+                "chromatic",
+                "prepare"
+              ]
+            }
+          },
+          "targets": {
+            "dev": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "dev"
+              },
+              "metadata": {
+                "scriptContent": "vite",
+                "runCommand": "pnpm run dev"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "build": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "build"
+              },
+              "metadata": {
+                "scriptContent": "vite build",
+                "runCommand": "pnpm run build"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "lint": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "lint"
+              },
+              "metadata": {
+                "scriptContent": "npm run lint:eslint && npm run lint:css",
+                "runCommand": "pnpm run lint"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "lint:fix": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "lint:fix"
+              },
+              "metadata": {
+                "scriptContent": "npm run lint:fix:eslint && npm run lint:fix:css",
+                "runCommand": "pnpm run lint:fix"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "lint:eslint": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "lint:eslint"
+              },
+              "metadata": {
+                "scriptContent": "eslint \"src/**/*.{ts,tsx,js}\" --max-warnings=0 --cache --cache-location .eslintcache",
+                "runCommand": "pnpm run lint:eslint"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "lint:fix:eslint": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "lint:fix:eslint"
+              },
+              "metadata": {
+                "scriptContent": "eslint \"src/**/*.{ts,tsx,js}\" --fix --max-warnings=0 --cache --cache-location .eslintcache",
+                "runCommand": "pnpm run lint:fix:eslint"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "lint:css": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "lint:css"
+              },
+              "metadata": {
+                "scriptContent": "stylelint \"src/**/*.css\" --max-warnings=0 --allow-empty-input --cache --cache-location .stylelintcache",
+                "runCommand": "pnpm run lint:css"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "lint:fix:css": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "lint:fix:css"
+              },
+              "metadata": {
+                "scriptContent": "stylelint \"src/**/*.css\" --fix --allow-empty-input --cache --cache-location .stylelintcache",
+                "runCommand": "pnpm run lint:fix:css"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "format": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "format"
+              },
+              "metadata": {
+                "scriptContent": "prettier --write . --ignore-path .gitignore",
+                "runCommand": "pnpm run format"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "typecheck": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "typecheck"
+              },
+              "metadata": {
+                "scriptContent": "tsc --noEmit -p tsconfig.json",
+                "runCommand": "pnpm run typecheck"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "test": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test"
+              },
+              "metadata": {
+                "scriptContent": "vitest",
+                "runCommand": "pnpm run test"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "test:ui": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:ui"
+              },
+              "metadata": {
+                "scriptContent": "vitest --ui",
+                "runCommand": "pnpm run test:ui"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:e2e": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:e2e"
+              },
+              "metadata": {
+                "scriptContent": "playwright test",
+                "runCommand": "pnpm run test:e2e"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:e2e:ui": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:e2e:ui"
+              },
+              "metadata": {
+                "scriptContent": "playwright test --ui",
+                "runCommand": "pnpm run test:e2e:ui"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:e2e:debug": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:e2e:debug"
+              },
+              "metadata": {
+                "scriptContent": "playwright test --debug",
+                "runCommand": "pnpm run test:e2e:debug"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "coverage": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "coverage"
+              },
+              "metadata": {
+                "scriptContent": "vitest run --coverage",
+                "runCommand": "pnpm run coverage"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "preview": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "preview"
+              },
+              "metadata": {
+                "scriptContent": "vite preview",
+                "runCommand": "pnpm run preview"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "storybook": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "storybook"
+              },
+              "metadata": {
+                "scriptContent": "storybook dev -p 6006",
+                "runCommand": "pnpm run storybook"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "storybook:build": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "storybook:build"
+              },
+              "metadata": {
+                "scriptContent": "storybook build",
+                "runCommand": "pnpm run storybook:build"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "chromatic": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "chromatic"
+              },
+              "metadata": {
+                "scriptContent": "chromatic --project-token $CHROMATIC_PROJECT_TOKEN --build-script-name storybook:build",
+                "runCommand": "pnpm run chromatic"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "prepare": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "prepare"
+              },
+              "metadata": {
+                "scriptContent": "husky",
+                "runCommand": "pnpm run prepare"
+              },
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "backend": {
+        "name": "backend",
+        "type": "lib",
+        "data": {
+          "root": "backend",
+          "sourceRoot": "backend",
+          "name": "backend",
+          "tags": [
+            "npm:public"
+          ],
+          "metadata": {
+            "targetGroups": {
+              "NPM Scripts": [
+                "start",
+                "dev",
+                "build",
+                "type-check",
+                "typecheck",
+                "lint",
+                "lint:fix",
+                "lint:strict",
+                "test",
+                "check-all"
+              ]
+            },
+            "description": "integraPCS GraphQL backend (Apollo Server, Neo4j, RabbitMQ, Redis)"
+          },
+          "targets": {
+            "start": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "start"
+              },
+              "metadata": {
+                "scriptContent": "node dist/src/index.js",
+                "runCommand": "pnpm run start"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "dev": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "dev"
+              },
+              "metadata": {
+                "scriptContent": "ts-node-dev --respawn --transpile-only -r tsconfig-paths/register src/index.ts",
+                "runCommand": "pnpm run dev"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "build": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "build"
+              },
+              "metadata": {
+                "scriptContent": "tsc",
+                "runCommand": "pnpm run build"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "type-check": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "type-check"
+              },
+              "metadata": {
+                "scriptContent": "tsc --noEmit",
+                "runCommand": "pnpm run type-check"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "typecheck": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "typecheck"
+              },
+              "metadata": {
+                "scriptContent": "tsc --noEmit",
+                "runCommand": "pnpm run typecheck"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "lint": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "lint"
+              },
+              "metadata": {
+                "scriptContent": "eslint . --ext .ts",
+                "runCommand": "pnpm run lint"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "lint:fix": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "lint:fix"
+              },
+              "metadata": {
+                "scriptContent": "eslint . --ext .ts --fix",
+                "runCommand": "pnpm run lint:fix"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "lint:strict": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "lint:strict"
+              },
+              "metadata": {
+                "scriptContent": "eslint . --ext .ts --max-warnings 0",
+                "runCommand": "pnpm run lint:strict"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test"
+              },
+              "metadata": {
+                "scriptContent": "jest",
+                "runCommand": "pnpm run test"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "check-all": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "check-all"
+              },
+              "metadata": {
+                "scriptContent": "npm run typecheck && npm run lint",
+                "runCommand": "pnpm run check-all"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "nx-release-publish": {
+              "executor": "@nx/js:release-publish",
+              "dependsOn": [
+                "^nx-release-publish"
+              ],
+              "options": {},
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      }
+    },
+    "dependencies": {
+      "@integrapcs/design-tokens": [],
+      "platform-observability": [],
+      "@integrapcs/shared-types": [],
+      "contexts-work-package": [
+        {
+          "source": "contexts-work-package",
+          "target": "shared-kernel",
+          "type": "implicit"
+        },
+        {
+          "source": "contexts-work-package",
+          "target": "shared-patterns",
+          "type": "implicit"
+        },
+        {
+          "source": "contexts-work-package",
+          "target": "shared-common",
+          "type": "implicit"
+        },
+        {
+          "source": "contexts-work-package",
+          "target": "platform-db",
+          "type": "implicit"
+        },
+        {
+          "source": "contexts-work-package",
+          "target": "platform-graphql",
+          "type": "implicit"
+        }
+      ],
+      "platform-messaging": [],
+      "platform-security": [],
+      "platform-graphql": [],
+      "platform-config": [],
+      "shared-patterns": [],
+      "platform-auth": [],
+      "shared-common": [],
+      "shared-kernel": [],
+      "platform-db": [],
+      "frontend": [
+        {
+          "source": "frontend",
+          "target": "@integrapcs/shared-types",
+          "type": "static"
+        }
+      ],
+      "backend": [
+        {
+          "source": "backend",
+          "target": "@integrapcs/shared-types",
+          "type": "static"
+        }
+      ]
+    }
+  }
+}

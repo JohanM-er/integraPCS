@@ -7,21 +7,15 @@ lastUpdated: 2025-10-23
 
 # Repository Structure and Rules (DDD Monorepo Blueprint)
 
-This document replaces the previous draft. It defines a future-proof, bounded-context-first monorepo for this repository, grounded in the Work Package event-sourced design and ready for additional contexts (authorization, invoicing, cost-control, etc.).
+This document defines a future-proof, bounded-context-first monorepo for this repository, grounded in the Work Package event-sourced design and ready for additional contexts (authorization, invoicing, cost-control, etc.).
 
-Decisions (rooted in Work Package design and docs):
+Decisions (rooted in Work Package discussion):
 - Architecture: Event sourcing + CQRS, GraphQL API, Neo4j event store and projections, RabbitMQ outbox, React frontends
 - Bounded contexts: Work Package lifecycle today; more to follow as domains are discovered
 - Workspace tool: Nx with pnpm (pnpm as package manager, Nx for project graph, caching, module boundaries)
 - Context alignment: Backend contexts and frontend feature slices align 1:1
 - Shared vs platform: Keep shared/kernel minimal; put runtime infrastructure in platform; contexts consume via ports/adapters
 - Generated code: Lives only under generated/ per context/package
-
-See:
-- Work Package docs: docs/WorkPackFeature/*
-- Technical implementation: docs/WorkPackFeature/TECHNICAL_DESIGN.md, IMPLEMENTATION_GUIDE.md
-- API: docs/WorkPackFeature/API_SPECIFICATION.md
-- Auth evolution: docs/WorkPackFeature/AUTHORIZATION_PHASES.md
 
 ---
 
@@ -364,7 +358,9 @@ ADR process:
 
 ## Migration Plan (from current repo)
 
-Goal: Move incrementally without breaking dev productivity. Use Nx project graph to track affected changes.
+- Big Bang Move 
+- No needed to do it incrementally
+- Breaking dev productivity is totally ok
 
 1) Tooling bootstrap
 - Add pnpm-workspace.yaml and Nx (nx.json).
@@ -372,68 +368,19 @@ Goal: Move incrementally without breaking dev productivity. Use Nx project graph
 - Add ESLint boundaries rules above.
 
 2) Create target layout
-- Create apps/api and port backend/src/index.ts bootstrap to apps/api/src/main.ts.
-- Create platform/* with:
-  - platform/config: move backend/src/shared/env.ts → platform/config/env (merge with configuration schema).
-  - platform/observability: move backend/src/shared/logger.ts → platform/observability/logger.
-  - platform/graphql: migrate backend/src/api/context.ts → apps/api/src/graphql/context.ts; move server setup into platform/graphql/server.ts and compose in apps/api/src/main.ts.
-  - platform/messaging: move backend/src/infrastructure/messaging/RabbitMQService.ts → platform/messaging/rabbitmq.
-  - platform/auth: move backend/src/infrastructure/auth/SimpleAuthService.ts → platform/auth (or wire to existing authN service as per AUTHORIZATION_PHASES.md).
-  - apps/api/src/middleware: move backend/src/middleware/{cors,rateLimiter,security}.ts.
-  - apps/api/src/graphql/directives: move backend/src/api/directives/authDirective.ts.
-
 3) Extract the Work Package context
-- Create contexts/work-package/ with domain/application/infrastructure/interfaces as per template.
-- Move files:
-  - backend/src/domain/WorkPackageAggregate.ts → contexts/work-package/domain/WorkPackageAggregate.ts
-  - backend/src/domain/Task.ts → contexts/work-package/domain/Task.ts
-  - backend/src/domain/events/DomainEvents.ts → contexts/work-package/domain/events/DomainEvents.ts
-  - backend/src/domain/commands/Commands.ts → contexts/work-package/domain/commands/ (split per command where possible).
-  - backend/src/application/commandHandlers/WorkPackageCommandHandler.ts → contexts/work-package/application/commandHandlers/WorkPackageCommandHandler.ts
-  - backend/src/application/projections/WorkPackageProjectionPipeline.ts → contexts/work-package/application/projections/pipelines/WorkPackageProjectionPipeline.ts
-  - backend/src/infrastructure/persistence/Neo4jEventStore.ts → contexts/work-package/infrastructure/persistence/event-store/WorkPackageEventStore.ts
-  - backend/src/infrastructure/persistence/WorkPackageRepository.ts → contexts/work-package/infrastructure/persistence/WorkPackageRepository.ts
-  - backend/src/graphql/typeDefs.ts → contexts/work-package/interfaces/graphql/schema.graphql (schema-first).
-  - backend/src/graphql/resolvers.ts → contexts/work-package/interfaces/graphql/resolvers/
-- Replace direct driver imports in context code with platform/db provider imports; replace RabbitMQ usage with platform/messaging.
-
 4) API composition
-- In apps/api/src/graphql/server.ts: compose per-context GraphQL module by importing contexts/work-package/interfaces/graphql module (typeDefs + resolvers + subscriptions).
-- Register auth directive and context creation using platform/auth service and AUTHORIZATION_PHASES.md Phase 1 rules.
-
 5) Frontend realignment
-- Create apps/web/src/features/work-package and move Work Package UI and GraphQL documents:
-  - frontend/src/components/WorkPackageGrid.tsx (if production-worthy) → apps/web/src/features/work-package/components/
-  - frontend/src/components/LineItemGrid.tsx (prototype) → spikes/prototypes/LineItemGrid/
-  - frontend/src/components/TComp.tsx (prototype) → spikes/prototypes/TComp/
-  - frontend/src/components/WorkPackageGrid.stories.tsx + all .stories.tsx → spikes/prototypes/[ComponentName]/.
-  - frontend/src/graphql/{mutations,queries}.ts → apps/web/src/features/work-package/graphql/
-  - frontend/src/hooks/useCounter.ts (non-domain) stays in apps/web/src/lib or move to feature if domain-related.
-- Remove the versioned frontend/storybook-static directory from the repo; add storybook-static to .gitignore.
-
 6) Documentation relocation
-- Move docs/WorkPackFeature/* under contexts/work-package/docs (or cross-link from docs/contexts/work-package/).
-- Keep ADRs in docs/adr/.
-
 7) CI and quality gates
 - Update .github/workflows to run Nx affected: lint, typecheck, test, build.
 - Add guard to fail PRs with changes under generated/ (unless job is codegen update) and block storybook-static inclusion.
 - Set coverage gates (e.g., 80% min for contexts/work-package/domain and application).
-
 8) Decommission old folders
-- backend/src/graphql/* (replaced by per-context interfaces).
-- backend/src/index.ts (replaced by apps/api/src/main.ts).
-- backend/src/infrastructure/messaging/* (moved to platform).
-- backend/src/shared/* (moved to platform/shared equivalents).
-- frontend/.storybook may remain if we plan Storybook for a UI library; otherwise park configs under spikes/prototypes/storybook/. All .stories.tsx move to spikes/prototypes.
-
 9) Runbook
 - local/docker-compose references apps/api, apps/jobs/*; update service names as needed.
 - Seed scripts live under local/seeds/ (context-aware seeds in each context tests/seeds if necessary).
-
-Interim allowances:
-- During migration, allow apps/api to import legacy paths until all moves complete; remove after successful cutover.
-- Keep a mapping doc in docs/contexts/work-package/migration.md for traceability.
+- No interim allowances move everyting
 
 ---
 

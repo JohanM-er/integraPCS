@@ -1,0 +1,36 @@
+{
+  "name": "jobs-projection-consumer",
+  "sourceRoot": "apps/jobs/projection-consumer/src",
+  "targets": {
+    "build": {
+      "executor": "@nx/node:build",
+      "options": {
+        "outputPath": "dist/apps/jobs/projection-consumer",
+        "main": "apps/jobs/projection-consumer/src/main.ts",
+        "tsConfig": "apps/jobs/projection-consumer/tsconfig.json"
+      }
+    },
+    "serve": {
+      "executor": "@nx/node:execute",
+      "options": {
+        "buildTarget": "jobs-projection-consumer:build"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p apps/jobs/projection-consumer/tsconfig.json"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "echo \"No specific lint config for jobs/projection-consumer yet\""
+      }
+    }
+  },
+  "tags": [
+    "scope:app",
+    "type:job"
+  ]
+}

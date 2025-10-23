@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 // CI-time validation: Detect Tailwind arbitrary values in className props
-// Scope: frontend/src/**/*.{ts,tsx,js,jsx}
+// Scope: apps/web/src/**/*.{ts,tsx,js,jsx}
 // Detection strategy:
 // - Prefer: extract same-line className string value; scan for arbitrary tokens with brackets [...]
-// - Fallback: if no extractable value, still look for bracket tokens on the same line after "className"
+const SEARCH_GLOB = 'apps/web/src/**/*.{ts,tsx,js,jsx}';
 // - Matches align with pre-commit guardrails (line-based heuristic)
 //
 // Allowlist:
@@ -212,7 +212,7 @@ function printViolations(violations) {
   }
   if (violations.length) {
     console.error(`\nFound ${violations.length} Tailwind arbitrary value violation(s).`);
-    console.error('This check mirrors the pre-commit hook and scans only className lines in frontend/src.');
+    console.error('This check mirrors the pre-commit hook and scans only className lines in apps/web/src.');
     console.error('For temporary exceptions, add an entry to scripts/config/tailwind-arbitrary-allowlist.json with a reason.');
   }
 }

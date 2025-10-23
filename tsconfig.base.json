@@ -18,6 +18,15 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
     "allowJs": true,
-    "checkJs": false
+    "checkJs": false,
+    "baseUrl": ".",
+    "paths": {
+      "@platform/*": ["platform/*/src", "platform/*/src/index.ts"],
+      "@shared/*": ["shared/*/src", "shared/*/src/index.ts"],
+      "@contexts/*": ["contexts/*/src", "contexts/*/src/index.ts"],
+      "@contexts/work-package/*": ["contexts/work-package/src/*"],
+      "@integrapcs/shared-types": ["packages/shared-types/src/index.ts"],
+      "@integrapcs/design-tokens": ["packages/design-tokens/src/index.ts"]
+    }
   }
 }

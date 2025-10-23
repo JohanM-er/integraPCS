@@ -1,12 +1,4 @@
-import React, {
-  forwardRef,
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from 'react';
+import React, { forwardRef, memo, useCallback, useEffect, useRef, useState } from 'react';
 
 import { cx } from '@/lib/cx';
 import {
@@ -84,7 +76,14 @@ type MoneyOptions = {
   maximumFractionDigits?: number;
 };
 
-export interface TCompProps<T> extends React.HTMLAttributes<HTMLTableElement> {
+type RowData = Record<string, any>;
+type TableBaseProps = Omit<React.TableHTMLAttributes<HTMLTableElement>, 'onChange'>;
+type TCompComponent = <T extends RowData>(
+  props: TCompProps<T> & React.RefAttributes<HTMLTableElement>
+) => React.ReactElement | null;
+type TCompWithDisplayName = TCompComponent & { displayName?: string };
+
+export interface TCompProps<T extends RowData> extends TableBaseProps {
   data: T[];
   columns: GridSchema<T>;
 
@@ -206,7 +205,7 @@ function toDateInputValue(value: unknown): string {
    TComp - Main component
    ============================================ */
 
-export const TComp = forwardRef(function TComp<T extends Record<string, any>>(
+export const TComp = forwardRef(function TComp<T extends RowData>(
   {
     data,
     columns,
@@ -285,6 +284,7 @@ export const TComp = forwardRef(function TComp<T extends Record<string, any>>(
       if (!col || col.readOnly) return;
 
       const row = data[rowIndex];
+      if (!row) return;
       const current = getValue(row, col);
 
       setEditingCell(selectedCell);
@@ -340,7 +340,7 @@ export const TComp = forwardRef(function TComp<T extends Record<string, any>>(
   );
 
   const finishCommitNavigation = useCallback(
-    (cause: CellEditEvent<any>['commitCause']) => {
+    (cause: CommitCause) => {
       if (!selectedCell) return;
       if (cause === 'tab') {
         moveSelection(0, 1);
@@ -354,12 +354,13 @@ export const TComp = forwardRef(function TComp<T extends Record<string, any>>(
   );
 
   const commitEdit = useCallback(
-    (cause: CellEditEvent<any>['commitCause']) => {
+    (cause: CommitCause) => {
       if (!editingCell) return;
 
       const { rowIndex, colIndex } = editingCell;
       const row = data[rowIndex];
       const col = columns[colIndex];
+      if (!row || !col) return;
       const prev = getValue(row, col);
 
       // Use parser or default based on column.type
@@ -520,6 +521,7 @@ export const TComp = forwardRef(function TComp<T extends Record<string, any>>(
           if (col && col.type === 'boolean' && !col.readOnly) {
             e.preventDefault();
             const row = data[rowIndex];
+            if (!row) return;
             const curr = Boolean(getValue(row, col));
             const next = !curr;
 
@@ -626,7 +628,9 @@ export const TComp = forwardRef(function TComp<T extends Record<string, any>>(
                   : never =
                   editing ? 'editing' : selected ? 'selected' : 'default';
 
-                const value = getValue(row as any, col as any);
+                const value = getValue(row, col);
+                const columnForRender = col as GridColumn<RowData>;
+                const rowForRender = row as RowData;
 
                 return (
                   <td
@@ -652,7 +656,7 @@ export const TComp = forwardRef(function TComp<T extends Record<string, any>>(
                     {editing ? (
                       <CellEditor
                         value={value}
-                        column={col as GridColumn<Record<string, any>>}
+                        column={columnForRender}
                         invalid={Boolean(draftError)}
                         autoFocus
                         selectAllOnMount={selectAllOnMount}
@@ -663,8 +667,8 @@ export const TComp = forwardRef(function TComp<T extends Record<string, any>>(
                     ) : (
                       <CellDisplay
                         value={value}
-                        row={row}
-                        column={col as GridColumn<Record<string, any>>}
+                        row={rowForRender}
+                        column={columnForRender}
                         locale={col.locale || defaultLocale}
                         currency={col.currency || defaultCurrency}
                         rowIndex={rowIndex}
@@ -680,9 +684,7 @@ export const TComp = forwardRef(function TComp<T extends Record<string, any>>(
       </table>
     </div>
   );
-}) as <T extends Record<string, any>>(
-  props: TCompProps<T> & React.RefAttributes<HTMLTableElement>
-) => JSX.Element;
+}) as TCompWithDisplayName;
 
 TComp.displayName = 'TComp';
 
@@ -690,17 +692,17 @@ TComp.displayName = 'TComp';
    Cell display (memoized)
    ============================================ */
 
-interface CellDisplayProps<T> {
+interface CellDisplayProps {
   value: unknown;
-  row: T;
-  column: GridColumn<T>;
+  row: RowData;
+  column: GridColumn<RowData>;
   locale: string;
   currency: string;
   rowIndex: number;
   colIndex: number;
 }
 
-const CellDisplay = memo(function CellDisplay<T>({
+const CellDisplay = memo(function CellDisplay({
   value,
   row,
   column,
@@ -708,7 +710,7 @@ const CellDisplay = memo(function CellDisplay<T>({
   currency,
   rowIndex,
   colIndex
-}: CellDisplayProps<T>) {
+}: CellDisplayProps) {
   if (column.formatter) {
     return <>{column.formatter(value, row, { rowIndex, colIndex, column })}</>;
   }
@@ -755,24 +757,26 @@ const CellDisplay = memo(function CellDisplay<T>({
       return <>{String(value ?? '')}</>;
     }
   }
-}) as <T, P extends CellDisplayProps<T>>(props: P) => JSX.Element;
+});
 
 /* ============================================
    Cell editor (memoized)
    ============================================ */
 
-interface CellEditorProps<T> {
+type CommitCause = CellEditEvent<RowData>['commitCause'];
+
+interface CellEditorProps {
   value: unknown;
-  column: GridColumn<T>;
+  column: GridColumn<RowData>;
   onDraftChange: (next: unknown) => void;
-  onCommit: (cause: CellEditEvent<T>['commitCause']) => void;
+  onCommit: (cause: CommitCause) => void;
   onCancel: () => void;
   autoFocus?: boolean;
   selectAllOnMount?: boolean;
   invalid?: boolean;
 }
 
-const CellEditor = memo(function CellEditor<T>({
+const CellEditor = memo(function CellEditor({
   value,
   column,
   onDraftChange,
@@ -781,7 +785,7 @@ const CellEditor = memo(function CellEditor<T>({
   autoFocus = true,
   selectAllOnMount = false,
   invalid = false
-}: CellEditorProps<T>) {
+}: CellEditorProps) {
   const inputRef = useRef<HTMLInputElement | HTMLSelectElement | null>(null);
 
   useEffect(() => {
@@ -838,7 +842,9 @@ const CellEditor = memo(function CellEditor<T>({
     const checked = Boolean(value);
     return (
       <input
-        ref={el => (inputRef.current = el)}
+        ref={el => {
+          inputRef.current = el;
+        }}
         type="checkbox"
         className={cx('cursor-pointer')}
         checked={checked}
@@ -857,7 +863,9 @@ const CellEditor = memo(function CellEditor<T>({
     const currentStr = String(value ?? '');
     return (
       <select
-        ref={el => (inputRef.current = el)}
+        ref={el => {
+          inputRef.current = el;
+        }}
         className={inputVariants({ size: 'md', invalid: invalid ? true : false })}
         value={
           // Ensure string value for native select
@@ -903,7 +911,9 @@ const CellEditor = memo(function CellEditor<T>({
 
   return (
     <input
-      ref={el => (inputRef.current = el)}
+      ref={el => {
+        inputRef.current = el;
+      }}
       type={inputType}
       className={inputVariants({ size: 'md', invalid: invalid ? true : false })}
       value={inputValue}
@@ -916,4 +926,4 @@ const CellEditor = memo(function CellEditor<T>({
       {...(column.editorProps || {})}
     />
   );
-}) as <T, P extends CellEditorProps<T>>(props: P) => JSX.Element;
+});

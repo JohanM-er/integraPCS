@@ -1,0 +1,30 @@
+{
+  "name": "shared-patterns",
+  "sourceRoot": "shared/patterns/src",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "main": "shared/patterns/src/index.ts",
+        "outputPath": "dist/shared/patterns",
+        "tsConfig": "shared/patterns/tsconfig.json"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p shared/patterns/tsconfig.json"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "echo \"No specific lint config for shared/patterns yet\""
+      }
+    }
+  },
+  "tags": [
+    "scope:shared",
+    "type:lib"
+  ]
+}

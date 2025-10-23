@@ -1,0 +1,7 @@
+packages:
+  - apps/*
+  - contexts/*
+  - platform/*
+  - shared/*
+  - packages/*
+  - spikes/*

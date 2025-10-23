@@ -18,3 +18,14 @@ docker-compose.override.yml
 # Lint caches
 .eslintcache
 .stylelintcache
+
+# Nx cache directory
+.nx/
+
+# Generated code (do not commit)
+generated/
+**/generated/
+
+# Storybook static builds (do not commit)
+storybook-static/
+**/storybook-static/

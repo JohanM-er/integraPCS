@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "removeComments": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "allowJs": true,
+    "checkJs": false,
+    "baseUrl": ".",
+    "paths": {
+      "@apps/*": ["apps/*/src/*"],
+      "@contexts/*": ["contexts/*/*"],
+      "@platform/*": ["platform/*/*"],
+      "@shared/*": ["shared/*/*"],
+      "@integrapcs/shared-types": ["packages/shared-types/src"],
+      "@integrapcs/design-tokens": ["packages/design-tokens/src"]
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "name": "shared-kernel",
+  "sourceRoot": "shared/kernel/src",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "main": "shared/kernel/src/index.ts",
+        "outputPath": "dist/shared/kernel",
+        "tsConfig": "shared/kernel/tsconfig.json"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p shared/kernel/tsconfig.json"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "echo \"No specific lint config for shared/kernel yet\""
+      }
+    }
+  },
+  "tags": [
+    "scope:shared",
+    "type:lib",
+    "layer:domain"
+  ]
+}

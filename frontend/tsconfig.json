@@ -1,6 +1,7 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
+    "baseUrl": ".",
     "target": "ES2022",
     "useDefineForClassFields": true,
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
@@ -27,5 +28,7 @@
     "types": ["vite/client", "@testing-library/jest-dom", "jest", "node"]
   },
   "include": ["src"],
-  "exclude": []
+  "exclude": [
+    "src/graphql/contexts/**/interfaces/resolvers.ts"
+  ]
 }

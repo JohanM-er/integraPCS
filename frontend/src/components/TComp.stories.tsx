@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { TComp, type GridSchema } from './TComp';
@@ -149,9 +149,9 @@ const Interactive: Story['render'] = args => {
 
   return (
     <TComp
+      {...args}
       data={rows}
       columns={baseColumns}
-      {...args}
       onChange={next => {
         setRows(next as SampleRow[]);
         // Forward to actions for logging
@@ -196,7 +196,9 @@ export const WithStickyHeader: Story = {
     // Generate many rows to demonstrate internal scroll + sticky header
     const makeRows = (count: number): SampleRow[] => {
       const rows: SampleRow[] = [];
+      const phases: SampleRow['phase'][] = ['design', 'build', 'test'];
       for (let i = 0; i < count; i++) {
+        const phase = phases[i % phases.length] ?? 'design';
         rows.push({
           id: `LI-20${(i + 1).toString().padStart(2, '0')}`,
           type: i % 3 === 0 ? 'Material' : i % 3 === 1 ? 'Labor' : 'Equipment',
@@ -206,7 +208,7 @@ export const WithStickyHeader: Story = {
           price: (i % 5) * 10 + 5.5,
           date: new Date(2024, 0, 1 + i),
           active: i % 2 === 0,
-          phase: (['design', 'build', 'test'] as const)[i % 3]
+          phase
         });
       }
       return rows;
@@ -216,9 +218,9 @@ export const WithStickyHeader: Story = {
 
     return (
       <TComp
+        {...args}
         data={rows}
         columns={baseColumns}
-        {...args}
         containerHeight="24rem"
         onChange={next => {
           setRows(next as SampleRow[]);
@@ -246,9 +248,9 @@ export const EuroCurrency: Story = {
 
     return (
       <TComp
+        {...args}
         data={rows}
         columns={euroColumns}
-        {...args}
         defaultLocale="de-DE"
         defaultCurrency="EUR"
         onChange={next => {
@@ -292,9 +294,9 @@ export const WithValidation: Story = {
 
     return (
       <TComp
+        {...args}
         data={rows}
         columns={columnsWithValidation}
-        {...args}
         onChange={next => {
           setRows(next as SampleRow[]);
           (args as any).onChange?.(next);
@@ -315,9 +317,9 @@ export const WithRowClick: Story = {
     const [rows, setRows] = useState<SampleRow[]>(baseRows);
     return (
       <TComp
+        {...args}
         data={rows}
         columns={baseColumns}
-        {...args}
         onChange={next => {
           setRows(next as SampleRow[]);
           (args as any).onChange?.(next);

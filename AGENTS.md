@@ -1,34 +1,47 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-- npm workspaces manage `backend/`, `frontend/`, `packages/design-tokens/`, and `packages/shared-types/`.
-- `backend/src/` holds Apollo GraphQL vertical slices; compiled code lives in `backend/dist/`.
-- `frontend/src/` contains the Vite + React app, with Vitest suites in `frontend/tests/`, Storybook stories in `frontend/src/**/*.stories.tsx`, and Playwright specs in `frontend/e2e/`.
-- `packages/design-tokens/` exposes Tailwind v4 theme tokens consumed by every UI workspace.
-- Shared contracts stay in `packages/shared-types/src/`; rebuild that package when GraphQL payloads change.
+- npm workspaces manage `apps/`, `contexts/`, `platform/`, `shared/`, and `packages/`.
+- `apps/api/` hosts the GraphQL API gateway; compiled output under `dist/apps/api/`.
+- `apps/web/src/` contains the Vite + React app, with Vitest suites in `apps/web/tests/`, Storybook stories in `apps/web/src/**/*.stories.tsx`, and Playwright specs in `apps/web/e2e/`.
+- `packages/design-tokens/` exposes Tailwind v4 theme tokens consumed by UI workspaces.
+- Shared contracts stay in `packages/shared-types/src/`; Nx builds this lib as needed.
 
 ## Build, Test, and Development Commands
-- Run `npm install` once at the repo root to hydrate every workspace (design tokens, backend, frontend, shared types).
-- `npm run dev` (via `dev-start.sh`) builds shared types, then starts the backend on :3000 and frontend on :5173.
-- `npm run build` executes all workspace builds; use `npm run build -w backend|frontend|packages/shared-types` for focused checks. Tokens are plain CSS, no build step required.
-- Daily loops: `npm run dev -w backend`, `npm run dev -w frontend`, `npm run watch -w packages/shared-types`, and `npm run storybook -w frontend` for component work.
-- Quality gates live at the root: `npm run lint` (ESLint + Stylelint), `npm run typecheck`, `npm run format:check`.
-- `npm run check:tailwind` scans `frontend/src` for Tailwind arbitrary values in `className` strings; mirrors the pre-commit hook. CI runs this as part of the Quality job matrix.
+- Run `pnpm install` once at the repo root to hydrate every workspace.
+- Start dev:
+  - API: `pnpm nx serve api`
+  - Web: `pnpm nx serve web`
+  - All: `pnpm nx run-many -t serve --projects=api,web --parallel` (see dev-start.sh)
+- Build:
+  - All: `pnpm nx run-many -t build`
+  - Focused: `pnpm nx build apps/web` or `pnpm nx build packages-shared-types`
+- Quality gates at the root:
+  - Lint: `pnpm nx affected -t lint`
+  - Typecheck: `pnpm nx affected -t typecheck`
+  - Format check: `pnpm run format:check`
+  - Tailwind arbitrary scan: `pnpm run check:tailwind` (scans apps/web/src)
+- Testing:
+  - Unit (web): `pnpm nx test web`
+  - E2E (web): `pnpm nx e2e web`
+  - Chromatic: `pnpm nx run web:storybook` (dev) or `pnpm nx run web:storybook:build`
 
 ## Coding Style & Naming Conventions
-- Prettier owns formatting (`tabWidth: 2`, single quotes, no trailing commas). Tailwind class ordering is handled by `prettier-plugin-tailwindcss`; run `npm run format` before pushing.
-- ESLint focuses on TypeScript/React/a11y rules and general code quality; it does not validate Tailwind utility strings. Pre-commit enforces hard gates (e.g., `.only` in tests) and flags CommonJS `require()` usage.
-- Tailwind guardrails: Avoid arbitrary values like `p-[13px]` and `text-[#333]`. These are blocked by a pre-commit check in staged frontend source files; CI continues to run lint/format checks.
+- Prettier owns formatting (`tabWidth: 2`, single quotes, no trailing commas). Tailwind class ordering is handled by `prettier-plugin-tailwindcss`; run `pnpm run format` before pushing.
+- ESLint focuses on TypeScript/React/a11y rules and general code quality; DDD layer boundaries are enforced via the root `@nx/enforce-module-boundaries` rule.
+- Tailwind guardrails: Avoid arbitrary values like `p-[13px]` and `text-[#333]`. These are blocked by a pre-commit check and CI scanning `apps/web/src`.
 - Stylelint lints CSS (root config extends `stylelint-config-tailwindcss`), but it does not validate Tailwind utility strings in JSX.
 - Naming rules: PascalCase for types/interfaces, camelCase for variables and parameters, UPPER_CASE for enum members.
 
 ## Testing Guidelines
-- Backend: `npm run test -w backend` (Jest) plus `npm run test:integration -w backend` for datastore and messaging flows.
-- Frontend: `npm run test -w frontend` (Vitest), `npm run coverage -w frontend`, `npm run test:e2e -w frontend` (Playwright), and `npm run chromatic -w frontend` for visual baselines.
-- Co-locate specs as `*.test.ts` or `*.spec.ts`; Husky blocks commits containing `.only` or missing `describe`/`it`. Place stories alongside components as `*.stories.tsx`.
+- API/Context tests will be introduced per Nx project targets; for now:
+  - Web unit: `pnpm nx test web` (Vitest)
+  - Web E2E: `pnpm nx e2e web` (Playwright)
+  - Chromatic visual baselines via `apps/web/.storybook`
+- Co-locate specs as `*.test.ts` or `*.spec.ts`; Husky blocks commits containing `.only` or missing `describe`/`it`.
 
 ## Commit & Pull Request Guidelines
-- Follow the existing short, imperative commit subjects (e.g., `Fix pre-commit hook for workspaces`) and keep scope tight.
+- Follow the existing short, imperative commit subjects and keep scope tight.
 - Before opening a PR, run lint, typecheck, and the affected test targets; call out what you executed in the description.
 - Link tickets, attach screenshots (or Chromatic diffs) for UI updates, and mention schema or contract changes explicitly.
 - Husky pre-commit runs staged type checks, import validation, and console/log scans—treat warnings as merge blockers.
@@ -39,12 +52,11 @@
 - Use Node.js 20+ to match workspace `engines` and avoid type incompatibilities during CI.
 
 ## Visual Guardrails
-- Import `@integrapcs/design-tokens/tokens.css` (or the `frontend/src/styles/tokens.css` re-export) before authoring UI. Allowed utilities: `bg-brand-500`, `text-neutral-900`, spacing `{1,2,3,4,5,6}` (~2,3,4,8,12,18px), typography `text-sm` (12px), `text-base` (14px), `text-lg` (16px) with shared `line-height:1.3`, `rounded-2`, `shadow-1`, table surfaces `bg-surface-table`/`bg-surface-table-muted`, and `border-table`.
+- Import `@integrapcs/design-tokens/tokens.css` (or `apps/web/src/styles/tokens.css`) before authoring UI. Allowed utilities: `bg-brand-500`, `text-neutral-900`, spacing `{1,2,3,4,5,6}`, typography scale, `rounded-2`, `shadow-1`, table surfaces, and `border-table`.
 - Doc map:
-  - `docs/UI system/UI_Design_System_Instructions.md` – token usage, spacing, tables, presence overlays, and implementation checklist.
+  - `docs/UI system/UI_Design_System_Instructions.md` – token usage, spacing, tables, overlays, implementation checklist.
   - `docs/UI system/UI_Design_System_Enforcement.md` – describes pre-commit, CI, and CVA guardrails that enforce the system.
-- Do not use inline styles or Tailwind arbitrary values (e.g., `p-[13px]`, `text-[#333]`). The pre-commit hook blocks these in staged frontend source; Prettier orders classlists.
-- CI enforces the no-arbitrary-values policy using `npm run check:tailwind`. The check mirrors the pre-commit hook and only scans `className` lines in `frontend/src`. For temporary exceptions, add entries to `scripts/config/tailwind-arbitrary-allowlist.json` (include a clear `reason` and remove the entry promptly).
-- Prefer composing existing components in `src/components` rather than bespoke markup.
+- Do not use inline styles or Tailwind arbitrary values (e.g., `p-[13px]`, `text-[#333]`). The pre-commit hook and CI block these in `apps/web/src`.
+- Prefer composing existing components in `apps/web/src/features` rather than bespoke markup.
 - Uphold accessibility in generated output (semantic structure, labelled controls, focus states, descriptive alt text).
 - Add or update a Storybook story for every new visual component to keep Chromatic baselines current.

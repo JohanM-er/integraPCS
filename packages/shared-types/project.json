@@ -1,0 +1,30 @@
+{
+  "name": "packages-shared-types",
+  "sourceRoot": "packages/shared-types/src",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "main": "packages/shared-types/src/index.ts",
+        "outputPath": "dist/packages/shared-types",
+        "tsConfig": "packages/shared-types/tsconfig.json"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p packages/shared-types/tsconfig.json"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "echo \"No specific lint config for packages/shared-types yet\""
+      }
+    }
+  },
+  "tags": [
+    "scope:package",
+    "type:lib"
+  ]
+}

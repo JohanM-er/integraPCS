@@ -1,0 +1,23 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../dist/out-tsc/contexts-work-package",
+    "declaration": true,
+    "types": [],
+    "module": "CommonJS",
+    "target": "ES2022",
+    "rootDir": "../../",
+    "composite": true,
+    "tsBuildInfoFile": "../../dist/out-tsc/contexts-work-package.tsbuildinfo"
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/index.ts",
+    "../../shared/kernel/src/**/*.ts",
+    "../../shared/patterns/src/**/*.ts"
+  ],
+  "exclude": [
+    "**/*.spec.ts",
+    "**/*.test.ts"
+  ]
+}

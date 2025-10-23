@@ -1,0 +1,30 @@
+{
+  "name": "shared-common",
+  "sourceRoot": "shared/common/src",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "main": "shared/common/src/index.ts",
+        "outputPath": "dist/shared/common",
+        "tsConfig": "shared/common/tsconfig.json"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p shared/common/tsconfig.json"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "echo \"No specific lint config for shared/common yet\""
+      }
+    }
+  },
+  "tags": [
+    "scope:shared",
+    "type:lib"
+  ]
+}

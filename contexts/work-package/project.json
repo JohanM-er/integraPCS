@@ -1,0 +1,37 @@
+{
+  "name": "contexts-work-package",
+  "sourceRoot": "contexts/work-package/src",
+  "implicitDependencies": [
+    "shared-kernel",
+    "shared-patterns",
+    "shared-common",
+    "platform-db",
+    "platform-graphql"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "main": "contexts/work-package/src/index.ts",
+        "outputPath": "dist/contexts/work-package",
+        "tsConfig": "contexts/work-package/tsconfig.lib.json"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p contexts/work-package/tsconfig.lib.json"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "echo \"No specific lint config for contexts/work-package yet\""
+      }
+    }
+  },
+  "tags": [
+    "scope:context:work-package",
+    "layer:interfaces"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "name": "jobs-outbox-publisher",
+  "sourceRoot": "apps/jobs/outbox-publisher/src",
+  "targets": {
+    "build": {
+      "executor": "@nx/node:build",
+      "options": {
+        "outputPath": "dist/apps/jobs/outbox-publisher",
+        "main": "apps/jobs/outbox-publisher/src/main.ts",
+        "tsConfig": "apps/jobs/outbox-publisher/tsconfig.json"
+      }
+    },
+    "serve": {
+      "executor": "@nx/node:execute",
+      "options": {
+        "buildTarget": "jobs-outbox-publisher:build"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p apps/jobs/outbox-publisher/tsconfig.json"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "echo \"No specific lint config for jobs/outbox-publisher yet\""
+      }
+    }
+  },
+  "tags": [
+    "scope:app",
+    "type:job"
+  ]
+}
