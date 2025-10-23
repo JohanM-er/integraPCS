@@ -5,11 +5,7 @@
     "build": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "rm -rf dist/packages/design-tokens",
-          "mkdir -p dist/packages/design-tokens/src",
-          "cp -R packages/design-tokens/src/* dist/packages/design-tokens/src/"
-        ]
+        "command": "node scripts/build/copy-design-tokens.mjs"
       }
     },
     "typecheck": {

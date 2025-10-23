@@ -14,7 +14,7 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [
       react({
-        fastRefresh: true
+        // Fast refresh is enabled by default in @vitejs/plugin-react for supported setups
       })
     ],
 
@@ -33,7 +33,10 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
-        '@integrapcs/shared-types': path.resolve(__dirname, '../../packages/shared-types/src')
+        '@integrapcs/shared-types': path.resolve(
+          __dirname,
+          '../../../../../packages/shared-types/src'
+        )
       }
     },
 

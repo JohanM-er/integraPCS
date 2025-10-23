@@ -2,7 +2,8 @@ import rateLimit from 'express-rate-limit';
 import Redis from 'ioredis';
 import RedisStore from 'rate-limit-redis';
 
-import type { Request, Response, NextFunction, RequestHandler } from 'express';
+import type { RequestHandler as ExpressRequestHandler } from 'express';
+import type { RequestHandler as CoreRequestHandler } from 'express-serve-static-core';
 import type { RedisReply } from 'rate-limit-redis';
 
 // Initialize Redis client for rate limiting
@@ -36,7 +37,7 @@ export const apiLimiter = rateLimit({
   legacyHeaders: false, // Disable `X-RateLimit-*` headers
   skip: (req) => {
     // Skip rate limiting for health checks
-    return req.path === '/health' || req.path === '/ready';
+    return req.path === '/healthz' || req.path === '/ready';
   }
 });
 
@@ -85,6 +86,15 @@ export const mutationLimiter = rateLimit({
   legacyHeaders: false
 });
 
+// Adapter bridging express-serve-static-core v5 handler to Express 4 RequestHandler
+const asExpressHandler = (h: CoreRequestHandler): ExpressRequestHandler =>
+  ((req, res, next) => (h as any)(req, res, next)) as ExpressRequestHandler;
+
+// Wrapped limiters with Express 4-compatible handler signatures
+const apiLimiterMW: ExpressRequestHandler = asExpressHandler(apiLimiter as unknown as CoreRequestHandler);
+const loginLimiterMW: ExpressRequestHandler = asExpressHandler(loginLimiter as unknown as CoreRequestHandler);
+const mutationLimiterMW: ExpressRequestHandler = asExpressHandler(mutationLimiter as unknown as CoreRequestHandler);
+
 /**
  * Middleware to apply rate limiting based on GraphQL operation
  *
@@ -93,27 +103,24 @@ export const mutationLimiter = rateLimit({
  * app.use('/graphql', graphqlRateLimitMiddleware);
  * ```
  */
-export const graphqlRateLimitMiddleware = ((req: Request, res: Response, next: NextFunction): void => {
+export const graphqlRateLimitMiddleware: ExpressRequestHandler = (req, res, next) => {
   const body = (req.body ?? {}) as { operationName?: string; query?: string };
   const operationName = body.operationName;
   const query = body.query ?? '';
 
   // Apply stricter rate limit for authentication
   if (operationName === 'Login' || operationName === 'Register') {
-    loginLimiter(req, res, next);
-    return;
+    return loginLimiterMW(req, res, next);
   }
 
   // Apply mutation rate limit
-  if (query.trim().startsWith('mutation')) {
-    mutationLimiter(req, res, next);
-    return;
+  if (typeof query === 'string' && query.trim().startsWith('mutation')) {
+    return mutationLimiterMW(req, res, next);
   }
 
   // Default: API rate limit
-  apiLimiter(req, res, next);
-  return;
-}) as RequestHandler;
+  return apiLimiterMW(req, res, next);
+};
 
 /**
  * Close Redis connection on shutdown

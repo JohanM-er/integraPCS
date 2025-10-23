@@ -3,12 +3,11 @@
   "sourceRoot": "platform/security/src",
   "targets": {
     "build": {
-      "executor": "@nx/js:tsc",
+      "executor": "nx:run-commands",
       "options": {
-        "main": "platform/security/src/index.ts",
-        "outputPath": "dist/platform/security",
-        "tsConfig": "platform/security/tsconfig.json"
-      }
+        "command": "npx tsc -p platform/security/tsconfig.json"
+      },
+      "outputs": ["{workspaceRoot}/dist/platform/security"]
     },
     "typecheck": {
       "executor": "nx:run-commands",

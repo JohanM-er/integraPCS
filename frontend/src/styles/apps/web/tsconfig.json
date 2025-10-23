@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../../../../../tsconfig.base.json",
   "compilerOptions": {
     "baseUrl": ".",
     "target": "ES2022",
@@ -20,8 +20,7 @@
     "allowJs": true,
     "checkJs": false,
     "paths": {
-      "@/*": ["./src/*"],
-      "@integrapcs/shared-types": ["../../packages/shared-types/src"]
+      "@/*": ["./src/*"]
     },
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,

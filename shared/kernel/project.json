@@ -3,12 +3,11 @@
   "sourceRoot": "shared/kernel/src",
   "targets": {
     "build": {
-      "executor": "@nx/js:tsc",
+      "executor": "nx:run-commands",
       "options": {
-        "main": "shared/kernel/src/index.ts",
-        "outputPath": "dist/shared/kernel",
-        "tsConfig": "shared/kernel/tsconfig.json"
-      }
+        "command": "npx tsc -p shared/kernel/tsconfig.json"
+      },
+      "outputs": ["{workspaceRoot}/dist/shared/kernel"]
     },
     "typecheck": {
       "executor": "nx:run-commands",

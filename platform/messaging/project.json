@@ -3,12 +3,11 @@
   "sourceRoot": "platform/messaging/src",
   "targets": {
     "build": {
-      "executor": "@nx/js:tsc",
+      "executor": "nx:run-commands",
       "options": {
-        "main": "platform/messaging/src/index.ts",
-        "outputPath": "dist/platform/messaging",
-        "tsConfig": "platform/messaging/tsconfig.json"
-      }
+        "command": "npx tsc -p platform/messaging/tsconfig.json"
+      },
+      "outputs": ["{workspaceRoot}/dist/platform/messaging"]
     },
     "typecheck": {
       "executor": "nx:run-commands",

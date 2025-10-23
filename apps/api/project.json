@@ -3,17 +3,17 @@
   "sourceRoot": "apps/api/src",
   "targets": {
     "build": {
-      "executor": "@nx/node:build",
+      "executor": "nx:run-commands",
+      "dependsOn": ["^build"],
       "options": {
-        "outputPath": "dist/apps/api",
-        "main": "apps/api/src/main.ts",
-        "tsConfig": "apps/api/tsconfig.json"
+        "command": "tsc -b apps/api/tsconfig.json && node scripts/build/link-runtime-aliases.mjs apps/api"
       }
     },
     "serve": {
-      "executor": "@nx/node:execute",
+      "executor": "nx:run-commands",
+      "dependsOn": ["api:build"],
       "options": {
-        "buildTarget": "api:build"
+        "command": "node dist/apps/api/main.js"
       }
     },
     "typecheck": {

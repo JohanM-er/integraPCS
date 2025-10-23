@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const rateLimit = require('express-rate-limit');
-const Redis = require('ioredis');
-const RedisStore = require('rate-limit-redis');
+import rateLimit from 'express-rate-limit';
+import Redis from 'ioredis';
+import RedisStore from 'rate-limit-redis';
 
 /**
  * Initialize Redis client for rate limiting

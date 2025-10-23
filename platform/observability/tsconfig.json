@@ -2,11 +2,20 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "module": "commonjs",
-    "outDir": "./dist",
     "rootDir": "./src",
+    "outDir": "../../dist/platform/observability",
+    "composite": true,
+    "incremental": true,
+    "tsBuildInfoFile": "../../dist/platform/observability/tsconfig.tsbuildinfo",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
     "types": ["node"],
-    "esModuleInterop": true
+    "declaration": true,
+    "declarationMap": true,
+    "declarationDir": "../../dist/platform/observability",
+    "sourceMap": true
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["dist", "node_modules", "**/*.test.ts", "**/*.spec.ts"]
+  "exclude": ["node_modules", "dist", "coverage", "**/*.test.ts", "**/*.spec.ts"]
 }

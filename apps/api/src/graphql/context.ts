@@ -13,16 +13,10 @@ export type GraphQLContext = {
 
 const auth = new SimpleAuthService();
 
-function extractBearerToken(authorizationHeader?: string | null): string | null {
-  if (!authorizationHeader) return null;
-  const m = authorizationHeader.match(/^Bearer\s+(.+)$/i);
-  return m ? m[1] : authorizationHeader;
-}
-
-export function createContext(args: { req: { headers?: Record<string, string | undefined> } }): GraphQLContext {
-  const headers = args.req.headers || {};
-  const authHeader = (headers.authorization ?? (headers as any).Authorization) as string | undefined;
-  const token = extractBearerToken(authHeader);
+export async function createContext({ req }: { req: any }): Promise<GraphQLContext> {
+  const headers = req.headers || {};
+  const authHeader = headers.authorization || headers.Authorization;
+  const token = authHeader ? authHeader.replace(/^Bearer\s+/i, '') : null;
   const user = auth.verify(token);
 
   return {

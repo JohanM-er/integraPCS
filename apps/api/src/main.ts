@@ -10,7 +10,7 @@ import { loadEnv } from '@platform/config';
 import { logger } from '@platform/observability';
 
 import { buildSchema, createApolloServer, attachWsServer } from './graphql/server';
-import { createContext, type GraphQLContext } from './graphql/context';
+import { createContext } from './graphql/context';
 
 async function main(): Promise<void> {
   const env = loadEnv();
@@ -31,8 +31,8 @@ async function main(): Promise<void> {
   app.use(express.json({ limit: '1mb' }));
 
   // Health endpoints
-  app.get('/healthz', (_req, res) => res.status(200).json({ status: 'ok' }));
-  app.get('/ready', (_req, res) => res.status(200).json({ status: 'ok' }));
+  app.get('/healthz', (_req: express.Request, res: express.Response) => res.status(200).json({ status: 'ok' }));
+  app.get('/ready', (_req: express.Request, res: express.Response) => res.status(200).json({ status: 'ok' }));
 
   // Rate limiting for GraphQL endpoint
   app.use(env.GRAPHQL_PATH, graphqlRateLimitMiddleware as any);
@@ -41,7 +41,11 @@ async function main(): Promise<void> {
   const apollo = createApolloServer(schema);
   await apollo.start();
 
-  app.use(env.GRAPHQL_PATH, expressMiddleware<GraphQLContext>(apollo, { context: createContext as any }));
+  // Apollo Server middleware
+  const apolloMiddleware = expressMiddleware(apollo, { 
+    context: async ({ req }) => await createContext({ req })
+  });
+  app.use(env.GRAPHQL_PATH, apolloMiddleware as any);
 
   // HTTP server
   const httpServer = http.createServer(app);

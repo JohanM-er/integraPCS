@@ -10,12 +10,12 @@
   ],
   "targets": {
     "build": {
-      "executor": "@nx/js:tsc",
+      "executor": "nx:run-commands",
+      "dependsOn": ["^build"],
       "options": {
-        "main": "contexts/work-package/src/index.ts",
-        "outputPath": "dist/contexts/work-package",
-        "tsConfig": "contexts/work-package/tsconfig.lib.json"
-      }
+        "command": "npx tsc -p contexts/work-package/tsconfig.lib.json"
+      },
+      "outputs": ["{workspaceRoot}/dist/contexts/work-package"]
     },
     "typecheck": {
       "executor": "nx:run-commands",

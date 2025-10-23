@@ -3,17 +3,16 @@
   "sourceRoot": "apps/jobs/outbox-publisher/src",
   "targets": {
     "build": {
-      "executor": "@nx/node:build",
+      "executor": "nx:run-commands",
       "options": {
-        "outputPath": "dist/apps/jobs/outbox-publisher",
-        "main": "apps/jobs/outbox-publisher/src/main.ts",
-        "tsConfig": "apps/jobs/outbox-publisher/tsconfig.json"
+        "command": "tsc -p apps/jobs/outbox-publisher/tsconfig.json --outDir dist/apps/jobs/outbox-publisher"
       }
     },
     "serve": {
-      "executor": "@nx/node:execute",
+      "executor": "nx:run-commands",
       "options": {
-        "buildTarget": "jobs-outbox-publisher:build"
+        "command": "node dist/apps/jobs/outbox-publisher/main.js",
+        "dependsOn": ["jobs-outbox-publisher:build"]
       }
     },
     "typecheck": {

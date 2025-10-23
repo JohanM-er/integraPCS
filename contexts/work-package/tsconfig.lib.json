@@ -1,23 +1,25 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "../../dist/out-tsc/contexts-work-package",
-    "declaration": true,
-    "types": [],
-    "module": "CommonJS",
-    "target": "ES2022",
-    "rootDir": "../../",
+    "module": "commonjs",
     "composite": true,
-    "tsBuildInfoFile": "../../dist/out-tsc/contexts-work-package.tsbuildinfo"
+    "incremental": true,
+    "rootDir": "./src",
+    "outDir": "../../dist/contexts/work-package",
+    "tsBuildInfoFile": "../../dist/contexts/work-package/tsconfig.tsbuildinfo",
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@shared/*": [
+        "../../dist/shared/*",
+        "../../dist/shared/*/index.d.ts"
+      ]
+    }
   },
-  "include": [
-    "src/**/*.ts",
-    "src/index.ts",
-    "../../shared/kernel/src/**/*.ts",
-    "../../shared/patterns/src/**/*.ts"
+  "references": [
+    { "path": "../../shared/kernel" },
+    { "path": "../../shared/patterns" }
   ],
-  "exclude": [
-    "**/*.spec.ts",
-    "**/*.test.ts"
-  ]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]
 }

@@ -29,3 +29,18 @@ generated/
 # Storybook static builds (do not commit)
 storybook-static/
 **/storybook-static/
+
+# TypeScript compilation outputs (should be in dist/, not src/)
+platform/*/src/**/*.js
+platform/*/src/**/*.d.ts
+platform/*/src/**/*.js.map
+platform/*/src/**/*.d.ts.map
+shared/*/src/**/*.js
+shared/*/src/**/*.d.ts
+shared/*/src/**/*.js.map
+shared/*/src/**/*.d.ts.map
+contexts/*/src/**/*.js
+contexts/*/src/**/*.d.ts
+contexts/*/src/**/*.js.map
+contexts/*/src/**/*.d.ts.map
+*.tsbuildinfo

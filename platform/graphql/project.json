@@ -3,12 +3,11 @@
   "sourceRoot": "platform/graphql/src",
   "targets": {
     "build": {
-      "executor": "@nx/js:tsc",
+      "executor": "nx:run-commands",
       "options": {
-        "main": "platform/graphql/src/index.ts",
-        "outputPath": "dist/platform/graphql",
-        "tsConfig": "platform/graphql/tsconfig.json"
-      }
+        "command": "npx tsc -p platform/graphql/tsconfig.json"
+      },
+      "outputs": ["{workspaceRoot}/dist/platform/graphql"]
     },
     "typecheck": {
       "executor": "nx:run-commands",

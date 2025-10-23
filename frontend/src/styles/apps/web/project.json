@@ -1,51 +1,60 @@
 {
   "name": "web",
-  "sourceRoot": "apps/web/src",
+  "sourceRoot": "frontend/src/styles/apps/web/src",
   "targets": {
     "serve": {
       "executor": "@nx/vite:dev-server",
       "options": {
-        "configFile": "apps/web/vite.config.ts",
+        "configFile": "frontend/src/styles/apps/web/vite.config.ts",
         "port": 5173
-      }
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "web:build"
+        },
+        "production": {
+          "buildTarget": "web:build"
+        }
+      },
+      "defaultConfiguration": "development"
     },
     "build": {
       "executor": "@nx/vite:build",
       "options": {
         "outputPath": "dist/apps/web",
-        "configFile": "apps/web/vite.config.ts"
+        "configFile": "frontend/src/styles/apps/web/vite.config.ts"
       }
     },
     "test": {
       "executor": "@nx/vite:test",
       "options": {
-        "configFile": "apps/web/vitest.config.ts"
+        "configFile": "frontend/src/styles/apps/web/vitest.config.ts"
       }
     },
     "e2e": {
       "executor": "@nx/playwright:playwright",
       "options": {
-        "config": "apps/web/playwright.config.ts"
+        "config": "frontend/src/styles/apps/web/playwright.config.ts"
       }
     },
     "storybook": {
       "executor": "@nx/storybook:storybook",
       "options": {
-        "configDir": "apps/web/.storybook",
+        "configDir": "frontend/src/styles/apps/web/.storybook",
         "port": 6006
       }
     },
     "storybook:build": {
       "executor": "@nx/storybook:build",
       "options": {
-        "configDir": "apps/web/.storybook",
+        "configDir": "frontend/src/styles/apps/web/.storybook",
         "outputDir": "dist/apps/web/storybook-static"
       }
     },
     "typecheck": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "tsc --noEmit -p apps/web/tsconfig.json"
+        "command": "tsc --noEmit -p frontend/src/styles/apps/web/tsconfig.json"
       }
     },
     "lint": {

@@ -3,12 +3,11 @@
   "sourceRoot": "platform/auth/src",
   "targets": {
     "build": {
-      "executor": "@nx/js:tsc",
+      "executor": "nx:run-commands",
       "options": {
-        "main": "platform/auth/src/index.ts",
-        "outputPath": "dist/platform/auth",
-        "tsConfig": "platform/auth/tsconfig.json"
-      }
+        "command": "npx tsc -p platform/auth/tsconfig.json"
+      },
+      "outputs": ["{workspaceRoot}/dist/platform/auth"]
     },
     "typecheck": {
       "executor": "nx:run-commands",

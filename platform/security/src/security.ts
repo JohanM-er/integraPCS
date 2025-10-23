@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const helmet = require('helmet');
+import helmet from 'helmet';
 
 /**
  * Apply security headers using Helmet

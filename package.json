@@ -33,25 +33,26 @@
     "packages/shared-types"
   ],
   "dependencies": {
+    "@types/express": "^5.0.3",
     "glob": "^11.0.3"
   },
   "devDependencies": {
+    "@nx/eslint-plugin": "19.8.4",
+    "@nx/js": "19.8.4",
+    "@nx/node": "19.8.4",
+    "@nx/playwright": "19.8.4",
+    "@nx/react": "19.8.4",
+    "@nx/storybook": "19.8.4",
+    "@nx/vite": "19.8.4",
     "chalk": "^5.4.1",
     "chromatic": "^13.3.0",
     "husky": "^9.1.4",
+    "nx": "19.8.4",
     "prettier": "^3.3.2",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "stylelint": "^16.9.0",
     "stylelint-config-recommended": "^14.0.0",
     "stylelint-config-tailwindcss": "^1.0.0",
-    "typescript": "5.9.3",
-    "nx": "19.8.4",
-    "@nx/js": "19.8.4",
-    "@nx/node": "19.8.4",
-    "@nx/react": "19.8.4",
-    "@nx/vite": "19.8.4",
-    "@nx/storybook": "19.8.4",
-    "@nx/playwright": "19.8.4",
-    "@nx/eslint-plugin": "19.8.4"
+    "typescript": "5.9.3"
   }
 }

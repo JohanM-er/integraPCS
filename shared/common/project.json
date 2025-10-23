@@ -3,12 +3,11 @@
   "sourceRoot": "shared/common/src",
   "targets": {
     "build": {
-      "executor": "@nx/js:tsc",
+      "executor": "nx:run-commands",
       "options": {
-        "main": "shared/common/src/index.ts",
-        "outputPath": "dist/shared/common",
-        "tsConfig": "shared/common/tsconfig.json"
-      }
+        "command": "npx tsc -p shared/common/tsconfig.json"
+      },
+      "outputs": ["{workspaceRoot}/dist/shared/common"]
     },
     "typecheck": {
       "executor": "nx:run-commands",

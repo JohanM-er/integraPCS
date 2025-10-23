@@ -3,12 +3,11 @@
   "sourceRoot": "platform/observability/src",
   "targets": {
     "build": {
-      "executor": "@nx/js:tsc",
+      "executor": "nx:run-commands",
       "options": {
-        "main": "platform/observability/src/index.ts",
-        "outputPath": "dist/platform/observability",
-        "tsConfig": "platform/observability/tsconfig.json"
-      }
+        "command": "npx tsc -p platform/observability/tsconfig.json"
+      },
+      "outputs": ["{workspaceRoot}/dist/platform/observability"]
     },
     "typecheck": {
       "executor": "nx:run-commands",

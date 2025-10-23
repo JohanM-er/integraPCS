@@ -14,9 +14,7 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [
       react({
-        // Fast refresh enabled by default
-        // React 19 JSX transform handled automatically
-        fastRefresh: true
+        // Fast refresh is enabled by default in @vitejs/plugin-react for supported setups
       })
     ],
 

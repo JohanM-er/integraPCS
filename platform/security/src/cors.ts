@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const cors = require('cors');
+import cors from 'cors';
 
 /**
  * CORS configuration with allowlist

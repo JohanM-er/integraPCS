@@ -2,10 +2,20 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "module": "commonjs",
-    "outDir": "./dist",
     "rootDir": "./src",
-    "types": ["node"]
+    "outDir": "../../dist/platform/config",
+    "composite": true,
+    "incremental": true,
+    "tsBuildInfoFile": "../../dist/platform/config/tsconfig.tsbuildinfo",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "types": ["node"],
+    "declaration": true,
+    "declarationMap": true,
+    "declarationDir": "../../dist/platform/config",
+    "sourceMap": true
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["dist", "node_modules", "**/*.test.ts", "**/*.spec.ts"]
+  "exclude": ["node_modules", "dist", "coverage", "**/*.test.ts", "**/*.spec.ts"]
 }
