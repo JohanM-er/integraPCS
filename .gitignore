@@ -44,3 +44,5 @@ contexts/*/src/**/*.d.ts
 contexts/*/src/**/*.js.map
 contexts/*/src/**/*.d.ts.map
 *.tsbuildinfo
+
+vite.config.*.timestamp*

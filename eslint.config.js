@@ -9,7 +9,9 @@ export default [
       '.nx/**',
       '**/generated/**',
       '**/storybook-static/**',
-      'storybook-static/**'
+      'storybook-static/**',
+      '**/vite.config.*.timestamp*',
+      '**/vitest.config.*.timestamp*'
     ]
   },
   {
@@ -24,13 +26,53 @@ export default [
           enforceBuildableLibDependency: true,
           allow: [],
           depConstraints: [
-            { sourceTag: 'layer:domain', onlyDependOnLibsWithTags: ['scope:shared', 'layer:domain'] },
-            { sourceTag: 'layer:application', onlyDependOnLibsWithTags: ['scope:shared', 'layer:domain', 'layer:application', 'scope:platform'] },
-            { sourceTag: 'layer:infrastructure', onlyDependOnLibsWithTags: ['scope:shared', 'layer:domain', 'layer:application', 'layer:infrastructure', 'scope:platform'] },
-            { sourceTag: 'layer:interfaces', onlyDependOnLibsWithTags: ['scope:shared', 'layer:application', 'layer:interfaces', 'scope:platform'] },
-            { sourceTag: 'scope:platform', onlyDependOnLibsWithTags: ['scope:shared', 'scope:platform'] },
+            {
+              sourceTag: 'layer:domain',
+              onlyDependOnLibsWithTags: ['scope:shared', 'layer:domain']
+            },
+            {
+              sourceTag: 'layer:application',
+              onlyDependOnLibsWithTags: [
+                'scope:shared',
+                'layer:domain',
+                'layer:application',
+                'scope:platform'
+              ]
+            },
+            {
+              sourceTag: 'layer:infrastructure',
+              onlyDependOnLibsWithTags: [
+                'scope:shared',
+                'layer:domain',
+                'layer:application',
+                'layer:infrastructure',
+                'scope:platform'
+              ]
+            },
+            {
+              sourceTag: 'layer:interfaces',
+              onlyDependOnLibsWithTags: [
+                'scope:shared',
+                'layer:application',
+                'layer:interfaces',
+                'scope:platform'
+              ]
+            },
+            {
+              sourceTag: 'scope:platform',
+              onlyDependOnLibsWithTags: ['scope:shared', 'scope:platform']
+            },
             { sourceTag: 'scope:shared', onlyDependOnLibsWithTags: ['scope:shared'] },
-            { sourceTag: 'scope:app', onlyDependOnLibsWithTags: ['scope:context:work-package', 'scope:platform', 'scope:shared', 'scope:package', 'scope:app'] }
+            {
+              sourceTag: 'scope:app',
+              onlyDependOnLibsWithTags: [
+                'scope:context:work-package',
+                'scope:platform',
+                'scope:shared',
+                'scope:package',
+                'scope:app'
+              ]
+            }
           ]
         }
       ]
