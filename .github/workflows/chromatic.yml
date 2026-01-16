@@ -18,10 +18,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js 20.19.0
+      - name: Setup Node.js 22
         uses: actions/setup-node@v4
         with:
-          node-version: 20.19.0
+          node-version: 22
           cache: pnpm
 
       - name: Enable Corepack
@@ -37,13 +37,13 @@ jobs:
         run: pnpm nx build packages-shared-types --if-present
 
       - name: Build Storybook (web)
-        run: pnpm nx run web:storybook:build
+        run: pnpm nx run frontend:storybook:build
 
       - name: Publish to Chromatic
         uses: chromaui/action@v1
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          storybookBuildDir: dist/storybook/web
+          storybookBuildDir: frontend/storybook-static
           exitZeroOnChanges: true
           onlyChanged: true
         env:

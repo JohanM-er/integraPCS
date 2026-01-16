@@ -7,7 +7,7 @@ on:
     branches: [main, develop]
 
 env:
-  NODE_VERSION: '20'
+  NODE_VERSION: '22'
   # Disable npm audit during install (speeds up CI)
   NPM_CONFIG_AUDIT: false
   NPM_CONFIG_FUND: false
