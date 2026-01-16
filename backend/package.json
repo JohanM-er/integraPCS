@@ -19,7 +19,7 @@
   "dependencies": {
     "@apollo/server": "^4.11.0",
     "@graphql-tools/schema": "^10.0.19",
-    "@integrapcs/shared-types": "*",
+    "@integrapcs/shared-types": "workspace:*",
     "amqplib": "^0.10.9",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",

@@ -6,5 +6,8 @@
   "main": "src/tokens.css",
   "exports": {
     "./tokens.css": "./src/tokens.css"
+  },
+  "peerDependencies": {
+    "tailwindcss": "^4.0.0"
   }
 }

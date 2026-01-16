@@ -1,13 +1,6 @@
-import {
-  ApolloClient,
-  InMemoryCache,
-  HttpLink,
-  split,
-  from,
-  type TypePolicy,
-  type NormalizedCacheObject
-} from '@apollo/client';
-import { onError } from '@apollo/client/link/error';
+import { ApolloClient, InMemoryCache, HttpLink, split, from, type TypePolicy } from '@apollo/client';
+import { ErrorLink } from '@apollo/client/link/error';
+import { CombinedGraphQLErrors } from '@apollo/client/errors';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { createClient as createWsClient } from 'graphql-ws';
@@ -46,12 +39,12 @@ const wsLink =
       )
     : null;
 
-// Error handling link
-const errorLink = onError(({ graphQLErrors, networkError }) => {
-  if (graphQLErrors) {
-    graphQLErrors.forEach(({ message, locations, path, extensions }) => {
+// Error handling link (Apollo Client 4 API)
+const errorLink = new ErrorLink(({ error, operation }) => {
+  if (CombinedGraphQLErrors.is(error)) {
+    error.errors.forEach(({ message, locations, path, extensions }) => {
       console.error(
-        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
+        `[GraphQL error]: Message: ${message}, Location: ${JSON.stringify(locations)}, Path: ${path}`,
         extensions
       );
 
@@ -62,10 +55,9 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
         // window.location.href = '/login';
       }
     });
-  }
-
-  if (networkError) {
-    console.error(`[Network error]: ${networkError.message}`);
+  } else {
+    // Network or other error
+    console.error(`[Network error]: ${error.message}`, { operation: operation.operationName });
   }
 });
 
@@ -107,13 +99,14 @@ const typePolicies: Record<string, TypePolicy> = {
 };
 
 // Create Apollo Client instance
-export const apolloClient = new ApolloClient<NormalizedCacheObject>({
+export const apolloClient = new ApolloClient({
   link: from([errorLink, splitLink]),
   cache: new InMemoryCache({
-    typePolicies,
-    addTypename: true
+    typePolicies
   }),
-  connectToDevTools: import.meta.env.DEV,
+  devtools: {
+    enabled: import.meta.env.DEV
+  },
   defaultOptions: {
     watchQuery: {
       fetchPolicy: 'cache-and-network',

@@ -7,24 +7,38 @@ This playbook bootstraps a fresh, event-sourced DDD monorepo that mirrors the in
 ## 1. Workstation Prerequisites
 
 1. Runtime & package manager
-   - Install Node.js ≥ 20.11.0 (ensures ES2023 libs and stable `fetch` support).
-   - Enable Corepack and pin pnpm 9.0.0:  
+   - Install Node.js ≥ 22.22.0 (LTS, ensures ES2023 libs, stable `fetch`, native WebSocket client, and V8 12.4 performance improvements).
+   - Enable Corepack and pin pnpm 9.0.0:
      ```bash
      corepack enable
      corepack prepare pnpm@9.0.0 --activate
      ```
      (Run these commands once per machine; avoid invoking `corepack prepare` in every dev script.)
-   - Provide `.nvmrc` and `.node-version` files with `20.11.0` to keep the team aligned.
+   - Provide `.nvmrc` and `.node-version` files with `22.22.0` to keep the team aligned.
 2. Tooling
    - `git`, `gh` (optional), `jq`.
-   - `docker` + `docker compose` (for Neo4j/Redis/RabbitMQ).
+   - **Container runtime** (for Neo4j/Redis/RabbitMQ) — choose one:
+     - **OrbStack** (recommended for macOS): Lightweight Docker Desktop alternative with better performance
+       ```bash
+       brew install orbstack
+       # Start OrbStack
+       orbctl start
+       # Verify Docker context is set
+       docker context list  # Should show "orbstack" as current
+       ```
+     - **Docker Desktop**: Traditional option, works on macOS/Windows/Linux
+       ```bash
+       # macOS
+       brew install --cask docker
+       # Start Docker Desktop from Applications
+       ```
    - `nx` CLI (invoked via `pnpm dlx nx`).
 3. Editor configuration
    - Enable Prettier with Tailwind sorting, ESLint flat config support, Stylelint, Nx Console.
    - Configure EditorConfig support (VS Code, JetBrains).
    - Check in `.vscode/settings.json` with `"typescript.tsdk": "node_modules/typescript/lib"` and format-on-save enabled to avoid editor drift.
 
-> Foot-gun: Node < 20.11 fails Husky typecheck hooks and `pnpm install` due to `engine-strict`. Validate with `node -v` before proceeding.
+> Foot-gun: Node < 22.x fails Husky typecheck hooks and `pnpm install` due to `engine-strict`. Validate with `node -v` before proceeding. Note: Node 22 uses `import with` syntax instead of `import assert` for JSON modules.
 
 ---
 
@@ -41,7 +55,7 @@ This playbook bootstraps a fresh, event-sourced DDD monorepo that mirrors the in
    pnpm pkg set name="integrapcs-monorepo" private=true description="DDD+ES monorepo scaffold"
    pnpm pkg set version="0.0.0" type="module"
    pnpm pkg set packageManager="pnpm@9.0.0"
-   pnpm pkg set engines.node=">=20.11.0"
+   pnpm pkg set engines.node=">=22"
    pnpm pkg set scripts.prepare="husky install"
    ```
 3. Baseline `.npmrc`
@@ -54,20 +68,22 @@ This playbook bootstraps a fresh, event-sourced DDD monorepo that mirrors the in
 4. Install workspace-wide dev dependencies
    ```bash
    pnpm add -D \
-     nx@19.8.4 @nx/node@19.8.4 @nx/react@19.8.4 @nx/vite@19.8.4 \
-     @nx/playwright@19.8.4 @nx/storybook@19.8.4 @nx/js@19.8.4 \
+     nx@22.3.3 @nx/node@22.3.3 @nx/react@22.3.3 @nx/vite@22.3.3 \
+     @nx/playwright@22.3.3 @nx/storybook@22.3.3 @nx/js@22.3.3 \
+     @nx/eslint-plugin@22.3.3 @nx/vitest@22.3.3 \
      typescript@5.9.3 tsc-alias@1.8.8 \
-     prettier@3.3.2 prettier-plugin-tailwindcss@0.6.11 \
-     eslint@9.33.0 @nx/eslint-plugin@19.8.4 eslint-plugin-react@7.34.2 \
-     @typescript-eslint/parser@8.39.0 @typescript-eslint/eslint-plugin@8.39.0 \
-     eslint-plugin-jsx-a11y@6 \
-     eslint-plugin-import@2 eslint-import-resolver-typescript@3 \
-     stylelint@16.9.0 stylelint-config-recommended@14.0.0 stylelint-config-tailwindcss@1.0.0 \
-     lint-staged@15.2.7 husky@9.1.4 chalk@5.4.1 glob@11.0.3 \
+     prettier@3.8.0 prettier-plugin-tailwindcss@0.6.14 \
+     eslint@9.22.0 eslint-plugin-react@7.34.2 \
+     @typescript-eslint/parser@8.34.0 @typescript-eslint/eslint-plugin@8.34.0 \
+     eslint-plugin-jsx-a11y@6.8.0 eslint-config-prettier@10.0.0 \
+     eslint-plugin-import@2.32.0 eslint-import-resolver-typescript@4.4.4 \
+     stylelint@16.26.1 stylelint-config-recommended@14.0.1 stylelint-config-tailwindcss@1.0.1 \
+     lint-staged@15.2.7 husky@9.1.7 chalk@5.6.2 glob@11.1.0 jiti@2.4.2 \
      dotenv-safe@9.0.0 zod@3.25.56 \
      @graphql-codegen/cli@5.0.4 @graphql-codegen/client-preset@4.5.0 \
      @graphql-codegen/typescript@4.1.0 @graphql-codegen/typescript-operations@4.1.0 \
-     ts-prune@0.11.7
+     ts-prune@0.11.7 \
+     vitest@4.0.0 @vitest/ui@4.0.0 @vitest/coverage-v8@4.0.0
    ```
 5. Adopt Nx preset
    ```bash
@@ -98,10 +114,15 @@ This playbook bootstraps a fresh, event-sourced DDD monorepo that mirrors the in
    ```yaml
    packages:
      - apps/*
-     - libs/**
+     - backend
+     - frontend
+     - contexts/*
+     - platform/*
+     - shared/*
      - packages/*
      - spikes/*
    ```
+   > Note: If you have standalone `frontend/` or `backend/` directories outside `apps/`, list them explicitly. pnpm will not auto-discover them from npm `workspaces` in package.json.
 3. Nx workspace layout (`nx.json`)
    ```json
    {
@@ -137,8 +158,8 @@ This playbook bootstraps a fresh, event-sourced DDD monorepo that mirrors the in
    ```json
    {
      "compilerOptions": {
-       "target": "ES2023",
-       "lib": ["ES2023"],
+       "target": "ES2024",
+       "lib": ["ES2024"],
        "module": "NodeNext",
        "moduleResolution": "NodeNext",
        "allowSyntheticDefaultImports": true,
@@ -206,7 +227,7 @@ This playbook bootstraps a fresh, event-sourced DDD monorepo that mirrors the in
      "compilerOptions": {
        "outDir": "../../dist/apps/web",
        "rootDir": "src",
-       "lib": ["ES2023", "DOM", "DOM.Iterable"],
+       "lib": ["ES2024", "DOM", "DOM.Iterable"],
        "jsx": "react-jsx",
        "types": ["vite/client"]
      },
@@ -488,6 +509,16 @@ Each `build` target uses `tsc -b` + `tsc-alias`. Add integration tests for drive
 - `build` script copies CSS into `dist/packages/design-tokens`.
 - Document usage: `@import "@integrapcs/design-tokens/tokens.css";`.
 - `project.json` `outputs`: `["{workspaceRoot}/dist/packages/design-tokens"]`.
+- **Important**: Add `tailwindcss` as a peer dependency in `package.json`:
+  ```json
+  {
+    "name": "@integrapcs/design-tokens",
+    "peerDependencies": {
+      "tailwindcss": "^4.0.0"
+    }
+  }
+  ```
+  This ensures the `@import "tailwindcss"` directive in tokens.css resolves correctly when consumed by other packages.
 
 ### `packages/shared-types`
 - Export shared GraphQL DTOs and event payload schemas.
@@ -558,10 +589,47 @@ pnpm nx g @nx/react:app web \
   --style=css
 ```
 
+- **Frontend dependencies** (add to `apps/web/package.json` or standalone `frontend/package.json`):
+  ```bash
+  pnpm add \
+    react@^19.2.0 react-dom@^19.2.0 \
+    @apollo/client@^4.1.0 graphql@16.11.0 graphql-ws@^5.16.0 \
+    zustand@^5.0.10 use-sync-external-store@^1.4.0 \
+    react-router-dom@^7.12.0 react-hook-form@^7.71.0 @hookform/resolvers@^5.1.1 \
+    zod@^3.25.56 \
+    @radix-ui/react-dialog @radix-ui/react-dropdown-menu @radix-ui/react-select \
+    tailwind-merge@^3.3.0 class-variance-authority@^0.7.1 clsx@^2.1.1 \
+    lucide-react@^0.513.0
+  ```
+
+- **Apollo Client 4 breaking changes**:
+  - React components moved: `import { ApolloProvider } from '@apollo/client/react'` (not `@apollo/client`)
+  - Core imports remain: `import { ApolloClient, InMemoryCache } from '@apollo/client'`
+  - Uses RxJS instead of zen-observable
+  - Local state management is opt-in (reduces bundle size 20-30%)
+
+- **Zustand 5 breaking changes**:
+  - Requires `use-sync-external-store` as peer dependency
+  - No default exports: use `import { create } from 'zustand'`
+  - For custom equality (e.g., `shallow`), use `useShallow` hook:
+    ```ts
+    import { useShallow } from 'zustand/shallow';
+    const { count, text } = useStore(useShallow(s => ({ count: s.count, text: s.text })));
+    ```
+
+- **Internal package references** (use `workspace:*` protocol):
+  ```json
+  {
+    "dependencies": {
+      "@integrapcs/design-tokens": "workspace:*",
+      "@integrapcs/shared-types": "workspace:*"
+    }
+  }
+  ```
+
 - Tailwind v4 explicit setup (Nx generator scaffolds v3):
   ```bash
-  pnpm add -D tailwindcss@next postcss autoprefixer
-  pnpm dlx tailwindcss init -p
+  pnpm add -D tailwindcss@^4.1.0 @tailwindcss/postcss@^4.0.0 postcss autoprefixer
   ```
 - Configure `postcss.config.cjs` with Tailwind v4 syntax and import tokens in `apps/web/src/styles/tokens.css`.
 - Tags: `["scope:app", "type:web", "buildable"]`.
@@ -591,7 +659,14 @@ pnpm nx g @nx/react:app web \
     }
   });
   ```
-- Add Storybook Accessibility & Interactions addons and Chromatic script.
+- Add Storybook Accessibility & Interactions addons and Chromatic script:
+  ```bash
+  pnpm add -D storybook@^10.1.11 @storybook/react-vite@^10.1.11 @storybook/addon-docs@^10.1.11 chromatic@^13.3.0
+  ```
+- Vite configuration: Use Vite 6.x (Vite 7 has ecosystem compatibility issues with `@tailwindcss/vite` and Vitest peer deps as of Jan 2026):
+  ```bash
+  pnpm add -D vite@^6.4.1 @vitejs/plugin-react@^4.5.0
+  ```
 - Verify `stylelint-config-tailwindcss` compatibility with Tailwind v4; capture upgrade plans in an ADR if pinning versions.
 
 ---
@@ -725,6 +800,8 @@ pnpm nx g @nx/react:app web \
 
 ## 15. Dev Environment Orchestration
 
+> **OrbStack vs Docker Desktop**: If using OrbStack on macOS, all `docker` and `docker compose` commands work identically. OrbStack provides faster container startup, lower memory usage, and seamless integration. Ensure OrbStack is running (`orbctl start`) before executing compose commands.
+
 1. `local/docker-compose.yml`
    ```yaml
    services:
@@ -852,7 +929,7 @@ pnpm nx g @nx/react:app web \
 1. GitHub Actions (`.github/workflows/ci.yml`)
    - Steps:
      - `uses: actions/checkout@v4`
-     - `uses: actions/setup-node@v4` with `node-version: 20.11.0`, `cache: 'pnpm'`, `cache-dependency-path: pnpm-lock.yaml`.
+     - `uses: actions/setup-node@v4` with `node-version: 22.22.0`, `cache: 'pnpm'`, `cache-dependency-path: pnpm-lock.yaml`.
      - `run: corepack enable && corepack prepare pnpm@9.0.0 --activate`.
      - `run: pnpm fetch`.
      - `run: pnpm install --frozen-lockfile`.

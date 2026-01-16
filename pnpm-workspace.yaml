@@ -1,6 +1,8 @@
 packages:
   - apps/*
+  - backend
   - contexts/*
+  - frontend
   - platform/*
   - shared/*
   - packages/*
