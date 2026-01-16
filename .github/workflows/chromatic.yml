@@ -1,33 +1,39 @@
-name: chromatic
+name: Chromatic
 
 on:
-  pull_request:
   push:
     branches:
       - main
+  pull_request:
 
 jobs:
   chromatic:
+    name: Build and Publish Storybook to Chromatic
     runs-on: ubuntu-latest
+    env:
+      CI: true
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js 20.19.0
+        uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: 'pnpm'
+          node-version: 20.19.0
+          cache: pnpm
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Activate pnpm 9.1.0
+        run: corepack prepare pnpm@9.1.0 --activate
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build shared types
+      - name: Build shared types (if present)
         run: pnpm nx build packages-shared-types --if-present
 
       - name: Build Storybook (web)
@@ -37,6 +43,8 @@ jobs:
         uses: chromaui/action@v1
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          workingDir: apps/web
-          exitZeroOnChanges: false
+          storybookBuildDir: dist/storybook/web
+          exitZeroOnChanges: true
           onlyChanged: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

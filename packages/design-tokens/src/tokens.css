@@ -15,9 +15,9 @@
   --spacing-1: 0.125rem;   /* 2px */
   --spacing-2: 0.1875rem;  /* 3px */
   --spacing-3: 0.25rem;    /* 4px */
-  --spacing-4: 0.5rem;    /* 8px */
-  --spacing-5: 0.75rem;   /* 12px */
-  --spacing-6: 1.125rem;  /* 18px */
+  --spacing-4: 0.5rem;     /* 8px */
+  --spacing-5: 0.75rem;    /* 12px */
+  --spacing-6: 1.125rem;   /* 18px */
 
   /* Typography scale */
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
@@ -74,15 +74,4 @@
     --color-surface-table-row-selected: var(--color-neutral-150);
     --color-border-table: var(--color-neutral-150);
   }
-}
-
-[data-theme="dark"] {
-  --color-surface-table: color-mix(in oklch, var(--color-neutral-0) 6%, black);
-  --color-surface-table-header: color-mix(in oklch, var(--color-neutral-0) 8%, black);
-  --color-surface-table-muted: color-mix(in oklch, var(--color-surface-table) 105%, var(--color-neutral-0));
-  --color-surface-table-row-hover: color-mix(in oklch, var(--color-surface-table) 90%, var(--color-neutral-0));
-  --color-surface-table-row-selected: color-mix(in oklch, var(--color-surface-table) 70%, var(--color-neutral-0));
-  --color-border-table: color-mix(in oklch, var(--color-neutral-0) 16%, transparent);
-  --color-fg-table: oklch(0.88 0 0);
-  --color-fg-table-header: oklch(0.9 0 0);
 }

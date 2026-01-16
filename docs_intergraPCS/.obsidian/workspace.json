@@ -4,19 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "179c7f5b62cfa713",
+        "id": "343594b6abf5a3d8",
         "type": "tabs",
         "children": [
           {
-            "id": "b4083b29950ee43f",
+            "id": "9a0424152c8e4156",
             "type": "leaf",
             "state": {
-              "type": "release-notes",
+              "type": "markdown",
               "state": {
-                "currentVersion": "1.9.14"
+                "file": "TECH_STACK 260115.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-book-up",
-              "title": "Release Notes 1.9.14"
+              "icon": "lucide-file",
+              "title": "TECH_STACK 260115"
             }
           }
         ]
@@ -167,8 +169,25 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "b4083b29950ee43f",
+  "active": "6ca992bdc67dff9f",
   "lastOpenFiles": [
+    "UI system intergraPCS/UI_Design_System_Instructions.md",
+    "UI system intergraPCS/UI_Design_System_Enforcement.md",
+    "UI system intergraPCS/LineItemGrid_Architecture.md",
+    "UI system intergraPCS/Google_Sheets_Grid_Architecture.md",
+    "UI system intergraPCS",
+    "UI system intergra/UI_Design_System_Instructions.md",
+    "UI system intergra/UI_Design_System_Enforcement.md",
+    "UI system intergra/LineItemGrid_Architecture.md",
+    "UI system intergra/Google_Sheets_Grid_Architecture.md",
+    "UI system intergra",
+    "SECURITY.md",
+    "PHASE_3_CI_CD_HARDENING.md",
+    "GRAPHQL_LAYER.md",
+    "UI system/UI_Design_System_Enforcement.md",
+    "UI system/UI_Design_System_Instructions.md",
+    "UI system/LineItemGrid_Architecture.md",
+    "UI system/Google_Sheets_Grid_Architecture.md",
     "schedNeoOrg-to-integraPCS-styling-bridge.md",
     "WorkPackFeature/IMPLEMENTATION_GUIDE.md",
     "WorkPackFeature/STANDALONE_POC_APPROACH.md",
@@ -176,18 +195,12 @@
     "WorkPackFeature/POC_ROADMAP.md",
     "WorkPackFeature",
     "UI system/demos/limited-token-guidelines.html",
-    "UI system/Google_Sheets_Grid_Architecture.md",
-    "UI system/LineItemGrid_Architecture.md",
     "development-improvements/lineitem-move-retrospective-session-COMPLETE.md",
     "development-improvements/lineitem-move-retrospective-session.md",
     "development-improvements/lineitem-move-retrospective-logs.md",
     "development-improvements/lineitem-move-retrospect-logs.md",
     "development-improvements/lineitem-move-manual-test.md",
     "development-improvements/lineitem-move-testresults.md",
-    "development-improvements/lineitem-move-implementationplan.md",
-    "development-improvements/lineitem-move-design-decisions.md",
-    "architecture-techreference.md",
-    "visuals/architecture-diagrams-guide.md",
     "visuals/middleware-architecture.svg",
     "visuals/database-design.svg",
     "visuals/backend-architecture.svg"
