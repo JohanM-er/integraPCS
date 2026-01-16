@@ -602,20 +602,49 @@ pnpm nx g @nx/react:app web \
     lucide-react@^0.513.0
   ```
 
-- **Apollo Client 4 breaking changes**:
-  - React components moved: `import { ApolloProvider } from '@apollo/client/react'` (not `@apollo/client`)
-  - Core imports remain: `import { ApolloClient, InMemoryCache } from '@apollo/client'`
-  - Uses RxJS instead of zen-observable
-  - Local state management is opt-in (reduces bundle size 20-30%)
+- **Apollo Client 4 setup**:
+  ```ts
+  // main.tsx - React components are in @apollo/client/react
+  import { ApolloProvider } from '@apollo/client/react';
+  import { apolloClient } from './lib/apollo';
 
-- **Zustand 5 breaking changes**:
-  - Requires `use-sync-external-store` as peer dependency
-  - No default exports: use `import { create } from 'zustand'`
-  - For custom equality (e.g., `shallow`), use `useShallow` hook:
-    ```ts
-    import { useShallow } from 'zustand/shallow';
-    const { count, text } = useStore(useShallow(s => ({ count: s.count, text: s.text })));
-    ```
+  // lib/apollo.ts - Core + error handling
+  import { ApolloClient, InMemoryCache, HttpLink, from } from '@apollo/client';
+  import { ErrorLink } from '@apollo/client/link/error';
+  import { CombinedGraphQLErrors } from '@apollo/client/errors';
+
+  const errorLink = new ErrorLink(({ error, operation }) => {
+    if (CombinedGraphQLErrors.is(error)) {
+      error.errors.forEach(({ message, path }) =>
+        console.error(`[GraphQL error]: ${message}, Path: ${path}`)
+      );
+    } else {
+      console.error(`[Network error]: ${error.message}`);
+    }
+  });
+
+  export const apolloClient = new ApolloClient({
+    link: from([errorLink, httpLink]),
+    cache: new InMemoryCache({ typePolicies }),
+    devtools: { enabled: import.meta.env.DEV }
+  });
+  ```
+
+- **Zustand 5 setup**:
+  ```ts
+  import { create } from 'zustand';
+  import { useShallow } from 'zustand/shallow';
+
+  // Define store
+  const useAppStore = create<AppState>((set) => ({
+    count: 0,
+    increment: () => set((s) => ({ count: s.count + 1 }))
+  }));
+
+  // Select multiple values with shallow comparison
+  const { count, text } = useAppStore(useShallow(s => ({ count: s.count, text: s.text })));
+  ```
+  Note: `use-sync-external-store` is required as a peer dependency.
 
 - **Internal package references** (use `workspace:*` protocol):
   ```json
