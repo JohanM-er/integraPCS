@@ -38,7 +38,7 @@ This playbook bootstraps a fresh, event-sourced DDD monorepo that mirrors the in
    - Configure EditorConfig support (VS Code, JetBrains).
    - Check in `.vscode/settings.json` with `"typescript.tsdk": "node_modules/typescript/lib"` and format-on-save enabled to avoid editor drift.
 
-> Foot-gun: Node < 22.x fails Husky typecheck hooks and `pnpm install` due to `engine-strict`. Validate with `node -v` before proceeding. Note: Node 22 uses `import with` syntax instead of `import assert` for JSON modules.
+> Foot-gun: Node < 22.x fails Husky typecheck hooks and `pnpm install` due to `engine-strict`. Validate with `node -v` before proceeding. Note: Node 22 uses `import with` syntax for JSON modules (e.g., `import data from './data.json' with { type: 'json' }`).
 
 ---
 
@@ -656,11 +656,11 @@ pnpm nx g @nx/react:app web \
   }
   ```
 
-- Tailwind v4 explicit setup (Nx generator scaffolds v3):
+- Tailwind v4 setup (install manually as Nx does not scaffold v4 yet):
   ```bash
   pnpm add -D tailwindcss@^4.1.0 @tailwindcss/postcss@^4.0.0 postcss autoprefixer
   ```
-- Configure `postcss.config.cjs` with Tailwind v4 syntax and import tokens in `apps/web/src/styles/tokens.css`.
+- Configure `postcss.config.cjs` with Tailwind v4 and import tokens in `apps/web/src/styles/tokens.css`.
 - Tags: `["scope:app", "type:web", "buildable"]`.
 - `project.json` `outputs`: `["{workspaceRoot}/dist/apps/web"]`.
 - TypeScript config: ensure DOM libs + JSX + Vite types as noted in section 4.4.
