@@ -97,10 +97,12 @@ PROJECT_ROOT=$(pwd)
 # Start development servers using Nx
 echo -e "${YELLOW}Starting development servers with Nx...${NC}"
 echo "🚀 Starting integraPCS Development Environment (Nx)"
-echo "🔧 Serving projects: api, web"
+echo "🔧 Serving projects: api, frontend"
 
 # Start servers in background and capture output
-pnpm nx run-many -t serve --projects=api,web --parallel > "$PROJECT_ROOT/dev-servers.log" 2>&1 &
+# Note: api uses 'serve' target, frontend uses 'dev' target
+pnpm nx run api:serve > "$PROJECT_ROOT/dev-servers.log" 2>&1 &
+pnpm nx run frontend:dev >> "$PROJECT_ROOT/dev-servers.log" 2>&1 &
 SERVERS_PID=$!
 
 echo "Development servers started with PID: $SERVERS_PID"

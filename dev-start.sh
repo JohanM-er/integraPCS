@@ -4,5 +4,10 @@
 set -euo pipefail
 
 echo "🚀 Starting integraPCS Development Environment (Nx)"
-echo "🔧 Serving projects: api, web"
-pnpm nx run-many -t serve --projects=api,web --parallel
+echo "🔧 Serving projects: api, frontend"
+
+# Run api:serve and frontend:dev in parallel
+pnpm nx run api:serve &
+pnpm nx run frontend:dev &
+
+wait
