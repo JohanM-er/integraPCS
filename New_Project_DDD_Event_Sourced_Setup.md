@@ -901,13 +901,47 @@ pnpm nx g @nx/react:app web \
    - Ensure `cypher-shell` is available inside the Neo4j container; the official 5.x community image includes it by default.
    - Provide `NEO4J_AUTH="neo4j/<password>"` in `.env.local`. Healthcheck parses it into user/password; no conflicting vars.
 
-2. Dev start script (`dev-start.sh`)
+2. Dev scripts
+
+   **Start servers** (`dev-start.sh`):
    ```bash
-   #!/usr/bin/env bash
+   #!/bin/bash
    set -euo pipefail
-   pnpm nx run-many -t serve --projects=api,web --parallel --watch
+   echo "🚀 Starting integraPCS Development Environment (Nx)"
+   echo "🔧 Serving projects: api, frontend"
+   pnpm nx run api:serve &
+   pnpm nx run frontend:dev &
+   wait
    ```
-   (Run `corepack enable && corepack prepare pnpm@9.0.0 --activate` once per machine as part of onboarding rather than inside the script.)
+
+   **Stop servers** (`stop-servers.sh`):
+   ```bash
+   #!/bin/bash
+   # Kill processes on ports 3000 (API), 5173 (frontend), 6006 (Storybook)
+   for port in 3000 5173 6006; do
+     pids=$(lsof -ti :$port 2>/dev/null)
+     [ -n "$pids" ] && kill -9 $pids 2>/dev/null
+   done
+   pkill -f "node dist/apps/api/main.js" 2>/dev/null
+   pkill -f "vite.*5173" 2>/dev/null
+   pkill -f "storybook.*6006" 2>/dev/null
+   echo "All servers stopped"
+   ```
+
+   **Restart servers** (`restart-servers.sh`):
+   ```bash
+   #!/bin/bash
+   # Stop all servers, check Docker, then start fresh
+   ./stop-servers.sh
+   docker-compose ps | grep -q "Up" || docker-compose up -d
+   pnpm nx run api:serve > dev-servers.log 2>&1 &
+   pnpm nx run frontend:dev >> dev-servers.log 2>&1 &
+   cd frontend && npm run storybook > ../storybook.log 2>&1 &
+   echo "Servers starting... check with: lsof -i :3000 -i :5173 -i :6006"
+   ```
+
+   Make scripts executable: `chmod +x dev-start.sh stop-servers.sh restart-servers.sh`
+
 3. Local seeds
    - `local/seeds/` with idempotent Neo4j seed scripts (Cypher) and RabbitMQ topology scripts.
 4. Secrets hygiene
